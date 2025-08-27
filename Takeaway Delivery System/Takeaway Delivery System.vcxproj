@@ -93,6 +93,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Time.cpp" />
+    <ClCompile Include="src\vendor\qflowlayout\flowlayout.cpp" />
     <QtRcc Include="src\MainWindow.qrc" />
     <QtUic Include="src\MainWindow.ui" />
     <QtMoc Include="src\MainWindow.h" />
@@ -101,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\myUtils.h" />
+    <ClInclude Include="src\vendor\qflowlayout\flowlayout.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

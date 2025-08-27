@@ -5,6 +5,7 @@
 
 #include <qtimer.h>
 #include <qdatetime.h>
+#include "vendor/qflowlayout/flowlayout.h"
 
 class MainWindow : public QMainWindow
 {
