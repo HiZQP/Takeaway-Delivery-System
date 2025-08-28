@@ -6,6 +6,7 @@
 #include <qtimer.h>
 #include <qdatetime.h>
 #include "vendor/qflowlayout/flowlayout.h"
+#include "SetMealManager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -18,6 +19,7 @@ public:
 private:
     Ui::MainWindowClass ui;
     QTimer* m_timer;
+	SetMealManager* m_setMealManager;
 
 private slots:
     void updateTime();

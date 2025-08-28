@@ -1,19 +1,15 @@
 #include "MainWindow.h"
 
+#include "SetMeal.h"
+
 MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent)
-{
+    : QMainWindow(parent){
     ui.setupUi(this);
+	m_setMealManager = new SetMealManager("D://setMeals.txt");
 
     FlowLayout* fLayout = new FlowLayout();
-    for (int i = 0;i < 50;i++) {
-        QWidget* widget = new QWidget();
-        QVBoxLayout* vLayout = new QVBoxLayout(widget);
-        QLabel* label = new QLabel();
-        label->setText("hello");
-        vLayout->addWidget(label);
-        fLayout->addWidget(widget);
-    }
+	m_setMealManager->showAllSetMeals(fLayout);
+
     ui.set_meal_scrollArea->widget()->setLayout(fLayout);
 
     // Ê±¼ä
@@ -23,8 +19,10 @@ MainWindow::MainWindow(QWidget* parent)
     updateTime();
 }
 
-MainWindow::~MainWindow()
-{}
+MainWindow::~MainWindow(){
+	delete m_timer;
+	delete m_setMealManager;
+}
 
 void MainWindow::updateTime() {
     QString localTime = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");

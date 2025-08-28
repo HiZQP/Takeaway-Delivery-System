@@ -92,6 +92,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SetMealManager.cpp" />
+    <ClCompile Include="src\SetMeal.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\vendor\qflowlayout\flowlayout.cpp" />
     <QtRcc Include="src\MainWindow.qrc" />
@@ -101,6 +103,8 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SetMealManager.h" />
+    <ClInclude Include="src\SetMeal.h" />
     <ClInclude Include="src\myUtils.h" />
     <ClInclude Include="src\vendor\qflowlayout\flowlayout.h" />
   </ItemGroup>
