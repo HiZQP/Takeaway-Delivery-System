@@ -103,8 +103,8 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\SetMealManager.h" />
-    <ClInclude Include="src\SetMeal.h" />
+    <QtMoc Include="src\SetMealManager.h" />
+    <QtMoc Include="src\SetMeal.h" />
     <ClInclude Include="src\myUtils.h" />
     <ClInclude Include="src\vendor\qflowlayout\flowlayout.h" />
   </ItemGroup>

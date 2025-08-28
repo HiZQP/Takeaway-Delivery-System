@@ -5,13 +5,18 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent){
     ui.setupUi(this);
-	m_setMealManager = new SetMealManager("D://setMeals.txt");
+	m_setMealManager = new SetMealManager("res/setMeals.txt");
 
-    FlowLayout* fLayout = new FlowLayout();
-	m_setMealManager->showAllSetMeals(fLayout);
+	m_setMealManager->showAllShelvesSetMeals();
 
-    ui.set_meal_scrollArea->widget()->setLayout(fLayout);
+    ui.shelvesSetMealScrollArea->widget()->setLayout(m_setMealManager->getShelvesLayout());
+	ui.basketSetMealScrollArea->widget()->setLayout(m_setMealManager->getBasketLayout());
 
+    connect(m_setMealManager, &SetMealManager::totalPriceChanged, this, [this]() {
+        ui.totalPriceLineEdit->setText(QString::number(m_setMealManager->getTotalPrice()));
+		});
+
+	connect(ui.clearAllBasketSetMealsButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::clearAllBasketSetMeals);
     // Ê±¼ä
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this, &MainWindow::updateTime);
