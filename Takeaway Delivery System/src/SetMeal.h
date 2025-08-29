@@ -4,7 +4,12 @@
 #include <string>
 #include <QObject>
 #include <QWidget>
-// »õ¼Ü½çÃæ¿Ø¼ş½á¹¹Ìå
+#include <QPushButton>
+#include <QLabel>
+#include <QTextEdit>
+#include <QComboBox>
+
+// è´§æ¶ç•Œé¢æ§ä»¶ç»“æ„ä½“
 struct ShelvesWidgetControls {
 	QPushButton* labelButton;
 	QLabel* nameLabel;
@@ -14,7 +19,7 @@ struct ShelvesWidgetControls {
 	QLabel* countLabel;
 };
 
-// ¹ºÎï³µ½çÃæ¿Ø¼ş½á¹¹Ìå
+// è´­ç‰©è½¦ç•Œé¢æ§ä»¶ç»“æ„ä½“
 struct BasketWidgetControls {
 	QPushButton* labelButton;
 	QLabel* nameLabel;
@@ -22,6 +27,16 @@ struct BasketWidgetControls {
 	QPushButton* subButton;
 	QLabel* countLabel;
 	QLabel* totalPriceLabel;
+};
+
+struct detailsWidgetControls {
+	QLineEdit* idLineEdit;
+	QLineEdit* nameLineEdit;
+	QTextEdit* descriptionTextEdit;
+	QLineEdit* priceLineEdit;
+	QComboBox* statusCombobox;
+	QPushButton* editButton;
+	QPushButton* deleteButton;
 };
 
 
@@ -37,16 +52,19 @@ private:
 	int m_price;
 	int m_status;
 
-	int m_count; // ¹ºÎï³µÖĞ¸ÃÌ×²ÍµÄÊıÁ¿
-	int m_totalPrice; // ¸ÃÌ×²ÍµÄ×Ü¼Û
+	int m_count; // è´­ç‰©è½¦ä¸­è¯¥å¥—é¤çš„æ•°é‡
+	int m_totalPrice; // è¯¥å¥—é¤çš„æ€»ä»·
 
 	ShelvesWidgetControls m_shelvesControls;
 	BasketWidgetControls m_basketControls;
+	detailsWidgetControls m_detailsControls;
 
-	QWidget* m_shelvesWidget;
-	QWidget* m_basketWidget;
+	QWidget* m_shelvesWidget = nullptr;
+	QWidget* m_basketWidget = nullptr;
+	QWidget* m_detailsWidget = nullptr;
 
 	void connectSignalsAndSlots();
+
 
 	void setupShelvesWidget(const std::string& id, const std::string& name, const int& price, const int& status);
 	void setupBasketWidget(const std::string& id, const std::string& name);
@@ -57,6 +75,8 @@ public:
 	inline QWidget* getShelvesWidget() { return m_shelvesWidget; }
 	inline QWidget* getBasketWidget() { return m_basketWidget; }
 
+	inline std::string getId() { return m_id; }
+	inline std::string getName() { return m_name; }
 	inline int getCount() { return m_count; }
 	inline int getTotalPrice() { return m_totalPrice; }
 
@@ -64,5 +84,8 @@ public:
 public slots:
 	void addToCount();
 	void subFromCount();
+	void createDetailsWidget();
+	void editDetails();
+	void saveDetails();
 };
 

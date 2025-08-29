@@ -121,7 +121,7 @@
                     <x>0</x>
                     <y>0</y>
                     <width>224</width>
-                    <height>273</height>
+                    <height>272</height>
                    </rect>
                   </property>
                  </widget>
@@ -150,7 +150,7 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton_2">
+                  <widget class="QPushButton" name="settalPushButton">
                    <property name="text">
                     <string>去结算</string>
                    </property>
@@ -361,7 +361,7 @@
      <x>0</x>
      <y>0</y>
      <width>860</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

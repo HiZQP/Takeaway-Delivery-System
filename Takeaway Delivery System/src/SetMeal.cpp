@@ -1,6 +1,4 @@
 #include "SetMeal.h"
-#include <QWidget>
-#include <QPushButton>
 #include <QLabel>
 #include <qfont.h>
 #include <QVBoxLayout>
@@ -12,6 +10,133 @@ void SetMeal::connectSignalsAndSlots(){
 	connect(m_shelvesControls.subButton, &QPushButton::clicked, this, &SetMeal::subFromCount);
 	connect(m_basketControls.addButton, &QPushButton::clicked, this, &SetMeal::addToCount);
 	connect(m_basketControls.subButton, &QPushButton::clicked, this, &SetMeal::subFromCount);
+	connect(m_shelvesControls.labelButton, &QPushButton::clicked, this, &SetMeal::createDetailsWidget);
+}
+
+void SetMeal::createDetailsWidget(){
+	m_detailsWidget = new QWidget();
+	m_detailsWidget->setParent(nullptr);
+	QVBoxLayout* vLayout = new QVBoxLayout(m_detailsWidget);
+	m_detailsWidget->setWindowTitle(QString::fromStdString("套餐详情"));
+
+	QHBoxLayout* idLayout = new QHBoxLayout();
+	QLabel* idLabel = new QLabel();
+	idLabel->setText(QString::fromStdString("套餐编号："));
+	m_detailsControls.idLineEdit = new QLineEdit();
+	m_detailsControls.idLineEdit->setText(QString::fromStdString(m_id));
+	m_detailsControls.idLineEdit->setReadOnly(true);
+	idLabel->setAlignment(Qt::AlignLeft);
+
+	QHBoxLayout* nameLayout = new QHBoxLayout();
+	QLabel* nameLabel = new QLabel();
+	nameLabel->setText(QString::fromStdString("套餐名称："));
+	m_detailsControls.nameLineEdit = new QLineEdit();
+	m_detailsControls.nameLineEdit->setText(QString::fromStdString(m_name));
+	m_detailsControls.nameLineEdit->setReadOnly(true);
+	nameLabel->setAlignment(Qt::AlignLeft);
+	QFont font = nameLabel->font();
+	font.setPointSize(16);
+	font.setBold(true);
+	nameLabel->setFont(font);
+	m_detailsControls.nameLineEdit->setFont(font);
+
+
+	QLabel* descTitleLabel = new QLabel();
+	descTitleLabel->setText(QString::fromUtf8("套餐描述："));
+	m_detailsControls.descriptionTextEdit = new QTextEdit();
+	QFont descFont = m_detailsControls.descriptionTextEdit->font();
+	descFont.setPointSize(12);
+	m_detailsControls.descriptionTextEdit->setFont(descFont);
+	m_detailsControls.descriptionTextEdit->setReadOnly(true);
+	//m_detailsControls.descriptionLabel->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+	m_detailsControls.descriptionTextEdit->setText(QString::fromStdString(m_description));
+
+	QHBoxLayout* priceLayout = new QHBoxLayout();
+	QLabel* priceLabel = new QLabel();
+	priceLabel->setText(QString::fromUtf8("套餐价格:").arg(QString::number(m_price)));
+	m_detailsControls.priceLineEdit = new QLineEdit();
+	m_detailsControls.priceLineEdit->setText(QString::number(m_price));
+	// 设置只读
+	m_detailsControls.priceLineEdit->setReadOnly(true);
+	QLabel* priceUnitLabel = new QLabel();
+	priceUnitLabel->setText(QString::fromUtf8("元"));
+
+	QHBoxLayout* statusLayout = new QHBoxLayout();
+	QLabel* statusLabel = new QLabel();
+	statusLabel->setText(QString::fromUtf8("套餐状态："));
+	m_detailsControls.statusCombobox = new QComboBox();
+	m_detailsControls.statusCombobox->addItem(QString::fromUtf8("可预定"));
+	m_detailsControls.statusCombobox->addItem(QString::fromUtf8("不可预定"));
+	m_detailsControls.statusCombobox->setCurrentIndex(m_status);
+	// 设置只读
+	m_detailsControls.statusCombobox->setEnabled(false);
+
+	QHBoxLayout* hLayout = new QHBoxLayout();
+	m_detailsControls.editButton = new QPushButton();
+	m_detailsControls.editButton->setText(QString::fromUtf8("编辑套餐"));
+
+	m_detailsControls.deleteButton = new QPushButton();
+	m_detailsControls.deleteButton->setText(QString::fromUtf8("删除套餐"));
+
+	idLayout->addWidget(idLabel);
+	idLayout->addWidget(m_detailsControls.idLineEdit);
+	vLayout->addLayout(idLayout);
+	hLayout->addWidget(m_detailsControls.editButton);
+	hLayout->addWidget(m_detailsControls.deleteButton);
+	nameLayout->addWidget(nameLabel);
+	nameLayout->addWidget(m_detailsControls.nameLineEdit);
+	vLayout->addLayout(nameLayout);
+	vLayout->addWidget(descTitleLabel);
+	vLayout->addWidget(m_detailsControls.descriptionTextEdit);
+	priceLayout->addWidget(priceLabel);
+	priceLayout->addWidget(m_detailsControls.priceLineEdit);
+	priceLayout->addWidget(priceUnitLabel);
+	vLayout->addLayout(priceLayout);
+	statusLayout->addWidget(statusLabel);
+	statusLayout->addWidget(m_detailsControls.statusCombobox);
+	vLayout->addLayout(statusLayout);
+	vLayout->addLayout(hLayout);
+
+	m_detailsWidget->show();
+	connect(m_detailsControls.editButton, &QPushButton::clicked, this, &SetMeal::editDetails);
+}
+
+void SetMeal::editDetails(){
+	m_detailsControls.idLineEdit->setReadOnly(false);
+	m_detailsControls.nameLineEdit->setReadOnly(false);
+	m_detailsControls.descriptionTextEdit->setReadOnly(false);
+	m_detailsControls.priceLineEdit->setReadOnly(false);
+	m_detailsControls.statusCombobox->setEnabled(true);
+	m_detailsControls.editButton->setText(QString::fromUtf8("保存修改"));
+	disconnect(m_detailsControls.editButton, &QPushButton::clicked, this, &SetMeal::editDetails);
+	connect(m_detailsControls.editButton, &QPushButton::clicked, this, &SetMeal::saveDetails);
+	// 刷新界面
+	m_detailsWidget->update();
+}
+
+void SetMeal::saveDetails(){
+	m_id = m_detailsControls.idLineEdit->text().toStdString();
+	m_name = m_detailsControls.nameLineEdit->text().toStdString();
+	m_description = m_detailsControls.descriptionTextEdit->toPlainText().toStdString();
+	m_price = m_detailsControls.priceLineEdit->text().toInt();
+	m_status = m_detailsControls.statusCombobox->currentIndex();
+	m_detailsControls.idLineEdit->setReadOnly(true);
+	m_detailsControls.nameLineEdit->setReadOnly(true);
+	m_detailsControls.descriptionTextEdit->setReadOnly(true);
+	m_detailsControls.priceLineEdit->setReadOnly(true);
+	m_detailsControls.statusCombobox->setEnabled(false);
+	m_detailsControls.editButton->setText(QString::fromUtf8("编辑套餐"));
+	disconnect(m_detailsControls.editButton, &QPushButton::clicked, this, &SetMeal::saveDetails);
+	connect(m_detailsControls.editButton, &QPushButton::clicked, this, &SetMeal::editDetails);
+	// 更新货架和购物车界面
+	m_shelvesControls.labelButton->setText(QString::fromStdString(m_id));
+	m_shelvesControls.nameLabel->setText(QString::fromStdString(m_name));
+	m_shelvesControls.priceLabel->setText(QString::fromUtf8("价格：%1 元").arg(QString::number(m_price)));
+	m_basketControls.labelButton->setText(QString::fromStdString(m_id));
+	m_basketControls.nameLabel->setText(QString::fromStdString(m_name));
+	m_totalPrice = calculateTotalPrice();
+	m_basketControls.totalPriceLabel->setText(QString::fromUtf8("%1 元").arg(QString::number(m_totalPrice)));
+	emit countChanged();
 }
 
 void SetMeal::setupShelvesWidget(const std::string& id,
@@ -113,6 +238,7 @@ SetMeal::~SetMeal()
 {
 	delete m_shelvesWidget;
 	delete m_basketWidget;
+	delete m_detailsWidget;
 }
 
 int SetMeal::calculateTotalPrice(){

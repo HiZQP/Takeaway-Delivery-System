@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_setMealManager, &SetMealManager::totalPriceChanged, this, [this]() {
         ui.totalPriceLineEdit->setText(QString::number(m_setMealManager->getTotalPrice()));
 		});
-
+	connect(ui.settalPushButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::showSettleWidget);
 	connect(ui.clearAllBasketSetMealsButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::clearAllBasketSetMeals);
     // Ê±¼ä
     m_timer = new QTimer(this);
