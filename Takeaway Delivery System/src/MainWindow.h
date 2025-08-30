@@ -7,6 +7,7 @@
 #include <qdatetime.h>
 #include "vendor/qflowlayout/flowlayout.h"
 #include "SetMealManager.h"
+#include "FileSystem.h"
 
 class MainWindow : public QMainWindow
 {
@@ -20,6 +21,7 @@ private:
     Ui::MainWindowClass ui;
     QTimer* m_timer;
 	SetMealManager* m_setMealManager;
+	FileSystem* m_fileSystem;
 
 private slots:
     void updateTime();

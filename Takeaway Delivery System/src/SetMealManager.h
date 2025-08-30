@@ -7,10 +7,12 @@
 #include "SetMeal.h"
 
 struct SettleWidgetControls {
+	QVBoxLayout* orderDetailsLayout;
 	QComboBox* addressCombobox;
 	QPushButton* settleButton;
 	QLineEdit* consigneeLineEdit;
 	QLineEdit* phoneLineEdit;
+	QLabel* totalPriceLabel;
 };
 
 class SetMealManager : public QObject {
@@ -31,13 +33,13 @@ private:
 	QWidget* m_settleWidget;
 
 	void connectSignalsAndSlots();
-	void loadSetMealsFromFile(const std::string& filename);
 	void calculateTotalPrice();
 	void createSettleWidget();
 public:
 	SetMealManager(const std::string& filename);
 	~SetMealManager();
 
+	void loadSetMeals(const std::vector<SetMeal*>& setMeals);
 	void addSetMeal(const std::string& id,
 					const std::string& name,
 					const std::string& description,

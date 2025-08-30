@@ -5,26 +5,15 @@
 #include <sstream>
 
 void SetMealManager::connectSignalsAndSlots(){
-	for (SetMeal* meal : m_setMeals) {
-		connect(meal, &SetMeal::countChanged, this, &SetMealManager::updateBasketSetMeals);
-	}
+	
 }
 
-void SetMealManager::loadSetMealsFromFile(const std::string& filename){
-	std::ifstream file(filename);
-	if (!file.is_open()) {
-		throw std::runtime_error("Could not open file: " + filename);
+void SetMealManager::loadSetMeals(const std::vector<SetMeal*>& setMeals){
+	for (SetMeal* meal : setMeals) {
+		addSetMeal(meal);
+		connect(meal, &SetMeal::countChanged, this, &SetMealManager::updateBasketSetMeals);
 	}
-	std::string line;
-	while (std::getline(file, line)) {
-		std::istringstream iss(line);
-		std::string id, name, description;
-		int price, status;
-		if (!(iss >> id >> name >> description >> price >> status)) {
-			continue; // Skip malformed lines
-		}
-		addSetMeal(id, name, description, price, status);
-	}
+	showAllShelvesSetMeals();
 }
 
 void SetMealManager::calculateTotalPrice() {
@@ -57,19 +46,17 @@ void SetMealManager::createSettleWidget() {
 
 	QScrollArea* orderDetailsScrollArea = new QScrollArea();
 	orderDetailsScrollArea->setWidgetResizable(true);
-	QWidget* orderDetailsWidget = new QWidget();
-	QVBoxLayout* orderDetailsLayout = new QVBoxLayout(orderDetailsWidget);
-	orderDetailsScrollArea->setWidget(orderDetailsWidget);
+	m_settleControls.orderDetailsLayout = new QVBoxLayout(orderDetailsScrollArea);
 
-	QLabel* totalPriceLabel = new QLabel();
-	QFont totalFont = totalPriceLabel->font();
+	m_settleControls.totalPriceLabel = new QLabel();
+	QFont totalFont = m_settleControls.totalPriceLabel->font();
 	totalFont.setPointSize(14);
 	totalFont.setBold(true);
-	totalPriceLabel->setFont(totalFont);
+	m_settleControls.totalPriceLabel->setFont(totalFont);
 	QHBoxLayout* buttonLayout = new QHBoxLayout();
 	m_settleControls.settleButton = new QPushButton();
 	m_settleControls.settleButton->setText(QString::fromUtf8("下单"));
-	buttonLayout->addWidget(totalPriceLabel);
+	buttonLayout->addWidget(m_settleControls.totalPriceLabel);
 	buttonLayout->addWidget(m_settleControls.settleButton);
 
 	vLayout->addLayout(formLayout);
@@ -80,7 +67,6 @@ void SetMealManager::createSettleWidget() {
 	vLayout->addLayout(buttonLayout);
 
 	//connect(m_settleControls.settleButton, &QPushButton::clicked, this, &SetMealManager::settleBasket);
-	m_settleWidget->show();
 }
 
 SetMealManager::SetMealManager(const std::string& filename){
@@ -88,7 +74,6 @@ SetMealManager::SetMealManager(const std::string& filename){
 	m_basketStatus = 0;
 
 	createSettleWidget();
-	loadSetMealsFromFile(filename);
 	connectSignalsAndSlots();
 	m_fShelvesLayout = new FlowLayout();
 	m_fBasketLayout = new QVBoxLayout();
@@ -126,14 +111,27 @@ void SetMealManager::showSettleWidget() {
 		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("购物车为空，无法结算！"));
 		return;
 	}
+	// 清空之前的订单详情
+	QLayoutItem* child;
+	while ((child = m_settleControls.orderDetailsLayout->takeAt(0)) != nullptr) {
+		if (child->widget()) {
+			child->widget()->setParent(nullptr);
+			delete child->widget();
+		}
+		delete child;
+	}
 	for (SetMeal* meal : m_setMeals) {
 		if (meal->getCount() > 0) {
 			QLabel* itemLabel = new QLabel();
 			itemLabel->setText(QString::fromStdString(
 				meal->getName() + " x " + std::to_string(meal->getCount()) + " = " + std::to_string(meal->getTotalPrice()) + " 元"
 			));
+			m_settleControls.orderDetailsLayout->addWidget(itemLabel);
 		}
 	}
+	m_settleControls.totalPriceLabel->setText(QString::fromUtf8("总价：%1 元").arg(QString::number(m_totalPrice)));
+	m_settleWidget->update();
+	m_settleWidget->show();
 }
 
 void SetMealManager::clearAllBasketSetMeals(){
@@ -146,6 +144,7 @@ void SetMealManager::clearAllBasketSetMeals(){
 	}
 	updateBasketSetMeals();
 	calculateTotalPrice();
+	m_settleWidget->close();
 	emit totalPriceChanged();
 }
 

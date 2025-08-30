@@ -121,7 +121,7 @@
                     <x>0</x>
                     <y>0</y>
                     <width>224</width>
-                    <height>272</height>
+                    <height>273</height>
                    </rect>
                   </property>
                  </widget>
@@ -361,17 +361,34 @@
      <x>0</x>
      <y>0</y>
      <width>860</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>文件(F)</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <widget class="QMenu" name="loadMenu">
+     <property name="title">
+      <string>加载</string>
+     </property>
+     <addaction name="loadSetMeals"/>
+     <addaction name="loadOrders"/>
+     <addaction name="loadDistence"/>
+    </widget>
+    <addaction name="fileSettingButton"/>
+    <addaction name="loadMenu"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>调试</string>
+    </property>
+    <addaction name="action_4"/>
+    <addaction name="action_5"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -390,6 +407,36 @@
   <action name="action_2">
    <property name="text">
     <string>导出</string>
+   </property>
+  </action>
+  <action name="fileSettingButton">
+   <property name="text">
+    <string>配置</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>上班</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>下班</string>
+   </property>
+  </action>
+  <action name="loadSetMeals">
+   <property name="text">
+    <string>套餐</string>
+   </property>
+  </action>
+  <action name="loadOrders">
+   <property name="text">
+    <string>订单</string>
+   </property>
+  </action>
+  <action name="loadDistence">
+   <property name="text">
+    <string>位置</string>
    </property>
   </action>
  </widget>

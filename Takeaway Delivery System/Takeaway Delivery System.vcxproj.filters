@@ -52,6 +52,9 @@
     <ClCompile Include="src\SetMealManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\FileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\myUtils.h">
@@ -60,11 +63,19 @@
     <ClInclude Include="src\vendor\qflowlayout\flowlayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SetMeal.h">
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\SetMealManager.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SetMealManager.h">
+    </QtMoc>
+    <QtMoc Include="src\SetMeal.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </QtMoc>
+    <QtMoc Include="src\FileSystem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\configs\config.txt" />
   </ItemGroup>
 </Project>

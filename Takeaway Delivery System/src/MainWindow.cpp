@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent){
     ui.setupUi(this);
 	m_setMealManager = new SetMealManager("res/setMeals.txt");
+	m_fileSystem = new FileSystem();
 
 	m_setMealManager->showAllShelvesSetMeals();
 
@@ -17,6 +18,11 @@ MainWindow::MainWindow(QWidget* parent)
 		});
 	connect(ui.settalPushButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::showSettleWidget);
 	connect(ui.clearAllBasketSetMealsButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::clearAllBasketSetMeals);
+	connect(ui.fileSettingButton, &QAction::triggered, m_fileSystem, &FileSystem::showFileSystemWidget);
+    connect(ui.loadSetMeals, &QAction::triggered, this, [this]() {
+		m_setMealManager->loadSetMeals(m_fileSystem->loadSetMeals());
+		});
+
     // Ê±¼ä
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this, &MainWindow::updateTime);
@@ -27,6 +33,7 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow(){
 	delete m_timer;
 	delete m_setMealManager;
+	delete m_fileSystem;
 }
 
 void MainWindow::updateTime() {
