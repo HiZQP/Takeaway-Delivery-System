@@ -39,5 +39,6 @@ public:
 public slots:
 	void showFileSystemWidget();
 	std::vector<SetMeal*> loadSetMeals();
+	std::vector<std::string> loadAddresses();
 };
 

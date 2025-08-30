@@ -2,5 +2,5 @@
 #include <string>
 
 namespace utils {
-	std::string getFormattedLocalTime();
+	std::string getFormattedLocalTime(std::string format);
 }

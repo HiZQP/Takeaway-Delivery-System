@@ -20,6 +20,15 @@ class SetMealManager : public QObject {
 
 signals:
 	void totalPriceChanged();
+	void newOrderPlaced(const std::string& orderId,
+		const std::string& consignee,
+		const std::string& phone,
+		const std::string& address,
+		const std::string& setMealID,
+		const std::string& setMealCount,
+		const std::string& totalPrice,
+		const std::string& orderTime,
+		const std::string& orderStatus);
 private:
 	std::vector<SetMeal*> m_setMeals;
 	std::vector<std::string> m_adddresses;
@@ -40,6 +49,7 @@ public:
 	~SetMealManager();
 
 	void loadSetMeals(const std::vector<SetMeal*>& setMeals);
+	void loadAddresses(const std::vector<std::string>& addresses);
 	void addSetMeal(const std::string& id,
 					const std::string& name,
 					const std::string& description,

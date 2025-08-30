@@ -374,7 +374,7 @@
      </property>
      <addaction name="loadSetMeals"/>
      <addaction name="loadOrders"/>
-     <addaction name="loadDistence"/>
+     <addaction name="loadAddresses"/>
     </widget>
     <addaction name="fileSettingButton"/>
     <addaction name="loadMenu"/>
@@ -434,9 +434,9 @@
     <string>订单</string>
    </property>
   </action>
-  <action name="loadDistence">
+  <action name="loadAddresses">
    <property name="text">
-    <string>位置</string>
+    <string>地址</string>
    </property>
   </action>
  </widget>

@@ -19,8 +19,12 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(ui.settalPushButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::showSettleWidget);
 	connect(ui.clearAllBasketSetMealsButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::clearAllBasketSetMeals);
 	connect(ui.fileSettingButton, &QAction::triggered, m_fileSystem, &FileSystem::showFileSystemWidget);
+	// ¼ÓÔØ 
     connect(ui.loadSetMeals, &QAction::triggered, this, [this]() {
 		m_setMealManager->loadSetMeals(m_fileSystem->loadSetMeals());
+		});
+	connect(ui.loadAddresses, &QAction::triggered, this, [this]() {
+		m_setMealManager->loadAddresses(m_fileSystem->loadAddresses());
 		});
 
     // Ê±¼ä

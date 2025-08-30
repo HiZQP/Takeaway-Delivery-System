@@ -4,16 +4,30 @@
 #include <fstream>
 #include <sstream>
 
+#include "myUtils.h"
+
 void SetMealManager::connectSignalsAndSlots(){
-	
+	connect(m_settleControls.settleButton, &QPushButton::clicked, this, &SetMealManager::settleBasket);
 }
 
 void SetMealManager::loadSetMeals(const std::vector<SetMeal*>& setMeals){
+	for(SetMeal* meal : m_setMeals)
+		delete meal;
+
+	m_setMeals.clear();
 	for (SetMeal* meal : setMeals) {
 		addSetMeal(meal);
 		connect(meal, &SetMeal::countChanged, this, &SetMealManager::updateBasketSetMeals);
 	}
 	showAllShelvesSetMeals();
+}
+
+void SetMealManager::loadAddresses(const std::vector<std::string>& addresses){
+	m_adddresses = addresses;
+	m_settleControls.addressCombobox->clear();
+	for (const std::string& address : m_adddresses) {
+		m_settleControls.addressCombobox->addItem(QString::fromStdString(address));
+	}
 }
 
 void SetMealManager::calculateTotalPrice() {
@@ -139,7 +153,7 @@ void SetMealManager::clearAllBasketSetMeals(){
 	// 重置所有套餐的数量和总价
 	for (SetMeal* meal : m_setMeals) {
 		while (meal->getCount() > 0) {
-			meal->subFromCount();
+			meal->setCount(0);
 		}
 	}
 	updateBasketSetMeals();
@@ -149,7 +163,31 @@ void SetMealManager::clearAllBasketSetMeals(){
 }
 
 void SetMealManager::settleBasket(){
-
+	std::string consignee = m_settleControls.consigneeLineEdit->text().toStdString();
+	std::string phone = m_settleControls.phoneLineEdit->text().toStdString();
+	std::string address = m_settleControls.addressCombobox->currentText().toStdString();
+	if (address.empty() || consignee.empty() || phone.empty()) {
+		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("请完整填写订单信息！"));
+		return;
+	}
+	if(phone.size() != 11 || !std::all_of(phone.begin(), phone.end(), ::isdigit)) {
+		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("请输入有效的11位电话号码！"));
+		return;
+	}
+	std::string orderId = utils::getFormattedLocalTime("%Y%m%d%H%M%S");
+	std::string setMealID;
+	std::string setMealCount;
+	for (SetMeal* meal : m_setMeals)
+		if (meal->getCount() > 0) {
+			setMealID += meal->getId() + "/";
+			setMealCount += std::to_string(meal->getCount()) + "/";
+		}
+	std::string orderTime = utils::getFormattedLocalTime("%Y-%m-%d %H:%M:%S");
+	std::string orderStatus = "未派送";
+	std::string totalPriceStr = std::to_string(m_totalPrice);
+	emit newOrderPlaced(orderId, consignee, phone, address, setMealID, setMealCount, totalPriceStr, orderTime, orderStatus);
+	clearAllBasketSetMeals();
+	QMessageBox::information(nullptr, QString::fromUtf8("成功"), QString::fromUtf8("订单已提交！"));
 }
 
 void SetMealManager::updateBasketSetMeals() {

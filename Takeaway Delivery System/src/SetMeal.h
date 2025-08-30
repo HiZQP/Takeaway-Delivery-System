@@ -79,6 +79,7 @@ public:
 	inline std::string getName() { return m_name; }
 	inline int getCount() { return m_count; }
 	inline int getTotalPrice() { return m_totalPrice; }
+	inline int setCount(const int& count) { m_count = count; return m_count; }
 
 	int calculateTotalPrice();
 public slots:

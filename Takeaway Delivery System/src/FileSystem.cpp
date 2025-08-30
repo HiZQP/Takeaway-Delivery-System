@@ -57,6 +57,33 @@ std::vector<SetMeal*> FileSystem::loadSetMeals(){
     return setMeals;
 }
 
+std::vector<std::string> FileSystem::loadAddresses(){
+	std::ifstream file(m_dataPath + "addresses.txt");
+	if (!file.is_open()) {
+		QMessageBox::critical(nullptr, QString::fromUtf8("错误"), QString::fromUtf8("无法打开地址数据文件！"));
+		return std::vector<std::string>();
+	}
+	std::vector<std::string> addresses;
+	std::string line;
+	while (std::getline(file, line)) {
+		std::stringstream ss(line);
+		std::string startPoint, endPoint;
+		float distance;
+		if (!(ss >> startPoint >> endPoint >> distance)) {
+			continue;
+		}
+		int flag = 0;
+		for(auto& addr : addresses)
+			if(addr == startPoint){
+				flag = 1;
+				break;
+			}
+		if (flag == 0)
+			addresses.push_back(startPoint);
+	}
+	return addresses;
+}
+
 void FileSystem::showFileSystemWidget() {
 	m_fileSystemWidget->show();
 }
