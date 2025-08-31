@@ -11,10 +11,7 @@ signals:
 	void saveOrders(const std::vector<Order>& orders);
 	void ordersChanged();
 private:
-	std::vector<Order> m_waitingOrders;
-	std::vector<Order> m_deliveredOrders;
-	std::vector<Order> m_cancelledOrders;
-	std::vector<Order> m_flitteredOrders;
+	std::vector<Order> m_orders;
 
 	void connectSignalsAndSlots();
 public:
@@ -24,6 +21,7 @@ public:
 	void loadOrders(const std::vector<Order>& orders);
 public slots:
 	void showAllOrders(QTableWidget* orderTable);
+	void showFlitteredOrders(QTableWidget* orderTable, QLineEdit* lineEdit);
 	void receiveNewOrder(
 		const std::string& orderId,
 		const std::string& consignee,

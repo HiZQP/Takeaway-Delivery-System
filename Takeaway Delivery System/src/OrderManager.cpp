@@ -1,4 +1,5 @@
 #include "OrderManager.h"
+#include "QLineEdit"
 
 void OrderManager::connectSignalsAndSlots() {
 
@@ -15,21 +16,10 @@ OrderManager::~OrderManager()
 
 void OrderManager::loadOrders(const std::vector<Order>& orders){
 	// 清空现有订单
-	m_waitingOrders.clear();
-	m_deliveredOrders.clear();
-	m_cancelledOrders.clear();
-	// 分类存储订单
-	for (const auto& order : orders) {
-		if (order.orderStatus == "待配送") {
-			m_waitingOrders.push_back(order);
-		}
-		else if (order.orderStatus == "已配送") {
-			m_deliveredOrders.push_back(order);
-		}
-		else if (order.orderStatus == "已取消") {
-			m_cancelledOrders.push_back(order);
-		}
-	}
+	m_orders.clear();
+
+	for (const auto& order : orders)
+		m_orders.push_back(order);
 	emit ordersChanged();
 }
 
@@ -37,10 +27,10 @@ void OrderManager::showAllOrders(QTableWidget* orderTable) {
 	// 清空表格
 	orderTable->clearContents();
 
-	orderTable->setRowCount(m_waitingOrders.size() + m_deliveredOrders.size() + m_cancelledOrders.size());
+	orderTable->setRowCount(m_orders.size());
 	int row = 0;
-	// 显示待配送订单
-	for (const auto& order : m_waitingOrders) {
+	// 显示订单
+	for (const auto& order : m_orders) {
 		orderTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(order.orderId)));
 		orderTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(order.consignee)));
 		orderTable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(order.phone)));
@@ -52,32 +42,31 @@ void OrderManager::showAllOrders(QTableWidget* orderTable) {
 		orderTable->setItem(row, 8, new QTableWidgetItem(QString::fromStdString(order.orderStatus)));
 		row++;
 	}
-	// 显示已配送订单
-	for (const auto& order : m_deliveredOrders) {
-		orderTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(order.orderId)));
-		orderTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(order.consignee)));
-		orderTable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(order.phone)));
-		orderTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(order.address)));
-		orderTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(order.setMealID)));
-		orderTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(order.setMealCount)));
-		orderTable->setItem(row, 6, new QTableWidgetItem(QString::number(order.totalPrice)));
-		orderTable->setItem(row, 7, new QTableWidgetItem(QString::fromStdString(order.orderTime)));
-		orderTable->setItem(row, 8, new QTableWidgetItem(QString::fromStdString(order.orderStatus)));
-		row++;
+}
+
+void OrderManager::showFlitteredOrders(QTableWidget* orderTable, QLineEdit* lineEdit) {
+	// 清空表格
+	if (lineEdit->text().isEmpty())
+		showAllOrders(orderTable);
+	orderTable->clearContents();
+	std::string fliter = lineEdit->text().toStdString();
+	std::vector<Order> fliteredOrders;
+	int row = 0;
+	for (auto order : m_orders) {
+		if (order.orderId.find(fliter) != std::string::npos || order.consignee.find(fliter) != std::string::npos) {
+			orderTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(order.orderId)));
+			orderTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(order.consignee)));
+			orderTable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(order.phone)));
+			orderTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(order.address)));
+			orderTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(order.setMealID)));
+			orderTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(order.setMealCount)));
+			orderTable->setItem(row, 6, new QTableWidgetItem(QString::number(order.totalPrice)));
+			orderTable->setItem(row, 7, new QTableWidgetItem(QString::fromStdString(order.orderTime)));
+			orderTable->setItem(row, 8, new QTableWidgetItem(QString::fromStdString(order.orderStatus)));
+			row++;
+		}
 	}
-	// 显示已取消订单
-	for (const auto& order : m_cancelledOrders) {
-		orderTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(order.orderId)));
-		orderTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(order.consignee)));
-		orderTable->setItem(row, 2, new QTableWidgetItem(QString::fromStdString(order.phone)));
-		orderTable->setItem(row, 3, new QTableWidgetItem(QString::fromStdString(order.address)));
-		orderTable->setItem(row, 4, new QTableWidgetItem(QString::fromStdString(order.setMealID)));
-		orderTable->setItem(row, 5, new QTableWidgetItem(QString::fromStdString(order.setMealCount)));
-		orderTable->setItem(row, 6, new QTableWidgetItem(QString::number(order.totalPrice)));
-		orderTable->setItem(row, 7, new QTableWidgetItem(QString::fromStdString(order.orderTime)));
-		orderTable->setItem(row, 8, new QTableWidgetItem(QString::fromStdString(order.orderStatus)));
-		row++;
-	}
+
 }
 
 void OrderManager::receiveNewOrder(
@@ -101,11 +90,8 @@ void OrderManager::receiveNewOrder(
 			orderTime,
 			orderStatus
 	};
-	m_waitingOrders.insert(m_waitingOrders.begin(), newOrder);
-	std::vector<Order> orders;
-	orders.insert(orders.end(), m_waitingOrders.begin(), m_waitingOrders.end());
-	orders.insert(orders.end(), m_deliveredOrders.begin(), m_deliveredOrders.end());
-	orders.insert(orders.end(), m_cancelledOrders.begin(), m_cancelledOrders.end());
+	m_orders.insert(m_orders.begin(), newOrder);
+
 	emit ordersChanged();
-	emit saveOrders(orders);
+	emit saveOrders(m_orders);
 }
