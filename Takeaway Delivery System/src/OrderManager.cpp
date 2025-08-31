@@ -102,5 +102,10 @@ void OrderManager::receiveNewOrder(
 			orderStatus
 	};
 	m_waitingOrders.insert(m_waitingOrders.begin(), newOrder);
+	std::vector<Order> orders;
+	orders.insert(orders.end(), m_waitingOrders.begin(), m_waitingOrders.end());
+	orders.insert(orders.end(), m_deliveredOrders.begin(), m_deliveredOrders.end());
+	orders.insert(orders.end(), m_cancelledOrders.begin(), m_cancelledOrders.end());
 	emit ordersChanged();
+	emit saveOrders(orders);
 }

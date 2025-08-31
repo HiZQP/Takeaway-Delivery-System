@@ -182,7 +182,7 @@ void SetMealManager::settleBasket(){
 			setMealCount += std::to_string(meal->getCount()) + "/";
 		}
 	std::string orderTime = utils::getFormattedLocalTime("%Y-%m-%d %H:%M:%S");
-	std::string orderStatus = "未派送";
+	std::string orderStatus = "待配送";
 	std::string totalPriceStr = std::to_string(m_totalPrice);
 	emit newOrderPlaced(orderId, consignee, phone, address, setMealID, setMealCount, totalPriceStr, orderTime, orderStatus);
 	clearAllBasketSetMeals();

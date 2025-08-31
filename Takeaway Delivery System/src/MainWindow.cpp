@@ -12,6 +12,7 @@ void MainWindow::connectSignalsAndSlots() {
 	connect(m_orderManager, &OrderManager::ordersChanged, this, [this]() {
 		m_orderManager->showAllOrders(ui.orderListTable);
 		});
+	connect(m_orderManager, &OrderManager::saveOrders, m_fileSystem, &FileSystem::saveOrdersToFile);
 	connect(m_setMealManager, &SetMealManager::newOrderPlaced, m_orderManager, &OrderManager::receiveNewOrder);
 	// 加载 
 	connect(ui.startWorkButton, &QAction::triggered, this, [this]() {

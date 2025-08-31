@@ -6,7 +6,9 @@
 
 class OrderManager : public QObject {
 	Q_OBJECT
+
 signals:
+	void saveOrders(const std::vector<Order>& orders);
 	void ordersChanged();
 private:
 	std::vector<Order> m_waitingOrders;

@@ -2,6 +2,9 @@
 #include <QMessageBox>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
+
+#define S(x) std::setw(x) <<
 
 void FileSystem::connectSignalsAndSlots() {
 
@@ -54,6 +57,7 @@ std::vector<SetMeal*> FileSystem::loadSetMeals(){
 		SetMeal* meal = new SetMeal(id, name, description, price, status);
 		setMeals.push_back(meal);
 	}
+	file.close();
     return setMeals;
 }
 
@@ -81,6 +85,7 @@ std::vector<std::string> FileSystem::loadAddresses(){
 		if (flag == 0)
 			addresses.push_back(startPoint);
 	}
+	file.close();
 	return addresses;
 }
 
@@ -111,8 +116,28 @@ std::vector<Order> FileSystem::loadOrders(){
 		};
 		orders.push_back(order);
 	}
+	file.close();
 	return orders;
+}
 
+void FileSystem::saveOrdersToFile(const std::vector<Order>& orders){
+	std::ofstream file(m_dataPath + "orders.txt");
+	if (!file.is_open()) {
+		QMessageBox::critical(nullptr, QString::fromUtf8("错误"), QString::fromUtf8("无法写入订单数据文件！"));
+	}
+	for (auto order : orders) {
+		file << S(30) order.orderId
+			 << S(12) order.consignee
+			 << S(30) order.phone
+			 << S(30) order.address
+			 << S(30) order.setMealID
+			 << S(20) order.setMealCount
+			 << S(8)  order.totalPrice
+			 << S(30) order.orderTime
+			 << S(12) order.orderStatus
+			 << std::endl;
+	}
+	file.close();
 }
 
 void FileSystem::showFileSystemWidget() {

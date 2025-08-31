@@ -40,5 +40,6 @@ public slots:
 	std::vector<SetMeal*> loadSetMeals();
 	std::vector<std::string> loadAddresses();
 	std::vector<Order> loadOrders();
+	void saveOrdersToFile(const std::vector<Order>& orders);
 };
 
