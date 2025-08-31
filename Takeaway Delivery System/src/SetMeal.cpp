@@ -239,6 +239,15 @@ SetMeal::~SetMeal() {
 	delete m_detailsWidget;
 }
 
+void SetMeal::setCount(const int& count){
+	m_count = count;
+	m_shelvesControls.countLabel->setText(QString::number(m_count));
+	m_basketControls.countLabel->setText(QString::number(m_count));
+	m_totalPrice = calculateTotalPrice();
+	m_basketControls.totalPriceLabel->setText(QString::fromUtf8("%1 元").arg(QString::number(m_totalPrice)));
+	emit countChanged();
+}
+
 int SetMeal::calculateTotalPrice() {
 	m_totalPrice = m_count * m_price;
 	return m_totalPrice;

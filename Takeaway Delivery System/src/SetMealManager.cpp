@@ -153,7 +153,6 @@ void SetMealManager::clearAllBasketSetMeals(){
 	for (SetMeal* meal : m_setMeals) {
 		while (meal->getCount() > 0) {
 			meal->setCount(0);
-			meal->calculateTotalPrice();
 		}
 	}
 	updateBasketSetMeals();
