@@ -5,6 +5,7 @@
 #include <QWidget>
 
 #include "SetMeal.h"
+#include "Order.h"
 
 struct FileSystemWidgetControls {
 	QLineEdit* dataPathLineEdit;
@@ -34,11 +35,10 @@ public:
 	void saveData();
 
 	void saveSetMeals();
-	void loadOrders();
-	void saveOrders();
 public slots:
 	void showFileSystemWidget();
 	std::vector<SetMeal*> loadSetMeals();
 	std::vector<std::string> loadAddresses();
+	std::vector<Order> loadOrders();
 };
 

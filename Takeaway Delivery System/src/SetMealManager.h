@@ -20,7 +20,8 @@ class SetMealManager : public QObject {
 
 signals:
 	void totalPriceChanged();
-	void newOrderPlaced(const std::string& orderId,
+	void newOrderPlaced(
+		const std::string& orderId,
 		const std::string& consignee,
 		const std::string& phone,
 		const std::string& address,

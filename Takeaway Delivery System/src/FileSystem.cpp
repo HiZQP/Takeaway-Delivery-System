@@ -84,6 +84,37 @@ std::vector<std::string> FileSystem::loadAddresses(){
 	return addresses;
 }
 
+std::vector<Order> FileSystem::loadOrders(){
+	std::ifstream file(m_dataPath + "orders.txt");
+	if (!file.is_open()) {
+		QMessageBox::critical(nullptr, QString::fromUtf8("错误"), QString::fromUtf8("无法打开订单数据文件！"));
+		return std::vector<Order>();
+	}
+	std::vector<Order> orders;
+	std::string line;
+	while (std::getline(file, line)) {
+		std::istringstream iss(line);
+		std::string orderId, consignee, phone, address, setMealID, setMealCount, totalPrice, orderTime1, orderTime2, orderStatus;
+		if (!(iss >> orderId >> consignee >> phone >> address >> setMealID >> setMealCount >> totalPrice >> orderTime1 >> orderTime2 >> orderStatus)) {
+			continue;
+		}
+		Order order{
+			orderId,
+			consignee,
+			phone,
+			address,
+			setMealID,
+			setMealCount,
+			std::stoi(totalPrice),
+			orderTime1 + " " + orderTime2,
+			orderStatus
+		};
+		orders.push_back(order);
+	}
+	return orders;
+
+}
+
 void FileSystem::showFileSystemWidget() {
 	m_fileSystemWidget->show();
 }

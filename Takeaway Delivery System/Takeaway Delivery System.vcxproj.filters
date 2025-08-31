@@ -55,12 +55,18 @@
     <ClCompile Include="src\FileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\OrderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\myUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\qflowlayout\flowlayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Order.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -72,6 +78,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\FileSystem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\OrderManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

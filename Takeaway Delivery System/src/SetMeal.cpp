@@ -231,17 +231,15 @@ SetMeal::SetMeal(const std::string& id,
 	setupShelvesWidget(id, name, price, status);
 	setupBasketWidget(id, name);
 	connectSignalsAndSlots();
-
 }
 
-SetMeal::~SetMeal()
-{
+SetMeal::~SetMeal() {
 	delete m_shelvesWidget;
 	delete m_basketWidget;
 	delete m_detailsWidget;
 }
 
-int SetMeal::calculateTotalPrice(){
+int SetMeal::calculateTotalPrice() {
 	m_totalPrice = m_count * m_price;
 	return m_totalPrice;
 }

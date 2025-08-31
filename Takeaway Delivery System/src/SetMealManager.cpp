@@ -149,16 +149,16 @@ void SetMealManager::showSettleWidget() {
 }
 
 void SetMealManager::clearAllBasketSetMeals(){
-	if (!m_fBasketLayout) return;
 	// 重置所有套餐的数量和总价
 	for (SetMeal* meal : m_setMeals) {
 		while (meal->getCount() > 0) {
 			meal->setCount(0);
+			meal->calculateTotalPrice();
 		}
 	}
 	updateBasketSetMeals();
-	calculateTotalPrice();
 	m_settleWidget->close();
+	calculateTotalPrice();
 	emit totalPriceChanged();
 }
 

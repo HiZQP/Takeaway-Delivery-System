@@ -8,9 +8,9 @@
 #include "vendor/qflowlayout/flowlayout.h"
 #include "SetMealManager.h"
 #include "FileSystem.h"
+#include "OrderManager.h"
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow{
     Q_OBJECT
 
 public:
@@ -22,7 +22,9 @@ private:
     QTimer* m_timer;
 	SetMealManager* m_setMealManager;
 	FileSystem* m_fileSystem;
+	OrderManager* m_orderManager;
 
+	void connectSignalsAndSlots();
 private slots:
     void updateTime();
 };

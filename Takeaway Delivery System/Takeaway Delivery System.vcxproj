@@ -92,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\OrderManager.cpp" />
     <ClCompile Include="src\FileSystem.cpp" />
     <ClCompile Include="src\SetMealManager.cpp" />
     <ClCompile Include="src\SetMeal.cpp" />
@@ -107,7 +108,9 @@
     <QtMoc Include="src\SetMealManager.h" />
     <QtMoc Include="src\SetMeal.h" />
     <QtMoc Include="src\FileSystem.h" />
+    <QtMoc Include="src\OrderManager.h" />
     <ClInclude Include="src\myUtils.h" />
+    <ClInclude Include="src\Order.h" />
     <ClInclude Include="src\vendor\qflowlayout\flowlayout.h" />
   </ItemGroup>
   <ItemGroup>

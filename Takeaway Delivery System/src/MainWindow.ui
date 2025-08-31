@@ -27,7 +27,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -60,8 +60,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>515</width>
-                  <height>342</height>
+                  <width>98</width>
+                  <height>28</height>
                  </rect>
                 </property>
                </widget>
@@ -93,6 +93,9 @@
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item>
@@ -120,8 +123,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>224</width>
-                    <height>273</height>
+                    <width>98</width>
+                    <height>28</height>
                    </rect>
                   </property>
                  </widget>
@@ -174,31 +177,92 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QScrollArea" name="scrollArea_3">
-             <property name="widgetResizable">
-              <bool>true</bool>
+            <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <item>
+              <widget class="QLabel" name="label_12">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;查找订单：&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>查找</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTableWidget" name="orderListTable">
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
              </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents_3">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>98</width>
-                <height>28</height>
-               </rect>
+             <property name="horizontalScrollBarPolicy">
+              <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+             </property>
+             <property name="sizeAdjustPolicy">
+              <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
+             </property>
+             <property name="sortingEnabled">
+              <bool>false</bool>
+             </property>
+             <property name="columnCount">
+              <number>9</number>
+             </property>
+             <column>
+              <property name="text">
+               <string>订单号</string>
               </property>
-             </widget>
+             </column>
+             <column>
+              <property name="text">
+               <string>收货人姓名</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>收货人电话</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>收货地址</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>套餐编号</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>套餐数量</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>总金额</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>下单时间</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>订单状态</string>
+              </property>
+             </column>
             </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <widget class="QPushButton" name="pushButton_5">
-               <property name="text">
-                <string>查找订单</string>
-               </property>
-              </widget>
-             </item>
              <item>
               <spacer name="horizontalSpacer_2">
                <property name="orientation">
@@ -240,21 +304,7 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QScrollArea" name="scrollArea_4">
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents_4">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>98</width>
-                <height>28</height>
-               </rect>
-              </property>
-             </widget>
-            </widget>
+            <widget class="QListWidget" name="listWidget_2"/>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -383,7 +433,7 @@
     <property name="title">
      <string>调试</string>
     </property>
-    <addaction name="action_4"/>
+    <addaction name="startWorkButton"/>
     <addaction name="action_5"/>
     <addaction name="separator"/>
    </widget>
@@ -414,7 +464,7 @@
     <string>配置</string>
    </property>
   </action>
-  <action name="action_4">
+  <action name="startWorkButton">
    <property name="text">
     <string>上班</string>
    </property>
