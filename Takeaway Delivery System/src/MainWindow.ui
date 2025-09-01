@@ -53,8 +53,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>704</width>
+                   <height>388</height>
                   </rect>
                  </property>
                 </widget>
@@ -116,8 +116,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
-                     <height>28</height>
+                     <width>224</width>
+                     <height>319</height>
                     </rect>
                    </property>
                   </widget>
@@ -473,6 +473,9 @@
     <property name="title">
      <string>统计</string>
     </property>
+    <addaction name="action_3"/>
+    <addaction name="action_4"/>
+    <addaction name="action_5"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_3"/>
@@ -525,6 +528,21 @@
   <action name="loadAddresses">
    <property name="text">
     <string>地址</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>当天订单</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>当月套餐</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>展示所有</string>
    </property>
   </action>
  </widget>

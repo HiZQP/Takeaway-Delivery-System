@@ -61,6 +61,9 @@
     <ClCompile Include="src\Map\Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\StatsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\myUtils.h">
@@ -73,6 +76,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Map\MapData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,7 +95,7 @@
     <QtMoc Include="src\OrderManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\Map\Map.h">
+    <QtMoc Include="src\StatsManager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

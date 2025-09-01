@@ -99,6 +99,7 @@
     <ClCompile Include="src\SetMeal.cpp" />
     <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\vendor\qflowlayout\flowlayout.cpp" />
+    <ClCompile Include="src\StatsManager.cpp" />
     <QtRcc Include="src\MainWindow.qrc" />
     <QtUic Include="src\MainWindow.ui" />
     <QtMoc Include="src\MainWindow.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\StatsManager.h" />
     <QtMoc Include="src\SetMealManager.h" />
     <QtMoc Include="src\SetMeal.h" />
     <QtMoc Include="src\FileSystem.h" />
