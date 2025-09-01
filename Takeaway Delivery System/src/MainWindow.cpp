@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget* parent)
 	m_fileSystem = new FileSystem();
 	m_orderManager = new OrderManager();
 	setupOrderTable();
+	this->setWindowTitle(QString::fromUtf8("宅急送订餐管理系统"));
 
 	m_setMealManager->showAllShelvesSetMeals();
 

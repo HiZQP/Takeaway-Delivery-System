@@ -30,8 +30,6 @@ public:
 	~FileSystem();
 
 	inline std::string getDataPath() const { return m_dataPath; }
-	
-	void setDataPath();
 
 public slots:
 	void showFileSystemWidget();
@@ -39,6 +37,8 @@ public slots:
 	std::vector<std::string> loadAddresses();
 	std::vector<Order> loadOrders();
 	MapData loadMap();
+	void selectDataPath();
+	void setDataPath();
 	void saveOrdersToFile(const std::vector<Order>& orders);
 };
 

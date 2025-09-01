@@ -1,5 +1,6 @@
 #include "FileSystem.h"
 #include <QMessageBox>
+#include <QFileDialog>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -7,7 +8,8 @@
 #define S(x) std::setw(x) <<
 
 void FileSystem::connectSignalsAndSlots() {
-
+	connect(m_fileSystemControls.browseButton, &QPushButton::clicked, this, &FileSystem::selectDataPath);
+	connect(m_fileSystemControls.loadButton, &QPushButton::clicked, this, &FileSystem::setDataPath);
 }
 
 void FileSystem::setupFileSystemWidget(){
@@ -27,12 +29,12 @@ void FileSystem::setupFileSystemWidget(){
 	hLayout->addWidget(m_fileSystemControls.browseButton);
 	vLayout->addWidget(pathGroupBox);
 	vLayout->addWidget(m_fileSystemControls.loadButton);
-
 }
 
 FileSystem::FileSystem(){
 	m_dataPath = "res/data/";
 	setupFileSystemWidget();
+	connectSignalsAndSlots();
 }
 
 FileSystem::~FileSystem(){
@@ -165,7 +167,17 @@ MapData FileSystem::loadMap(){
 	file.close();
 }
 
-void FileSystem::saveOrdersToFile(const std::vector<Order>& orders){
+void FileSystem::selectDataPath() {
+	QString enteredPath = QFileDialog::getExistingDirectory(nullptr, tr("选择文件夹"), QDir::homePath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	m_fileSystemControls.dataPathLineEdit->setText(enteredPath);
+}
+
+void FileSystem::setDataPath() {
+	m_dataPath = m_fileSystemControls.dataPathLineEdit->text().toStdString();
+	QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("数据路径已更改！"));
+}
+
+void FileSystem::saveOrdersToFile(const std::vector<Order>& orders) {
 	std::ofstream file(m_dataPath + "orders.txt");
 	if (!file.is_open()) {
 		QMessageBox::critical(nullptr, QString::fromUtf8("错误"), QString::fromUtf8("无法写入订单数据文件！"));
