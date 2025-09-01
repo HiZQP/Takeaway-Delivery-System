@@ -6,6 +6,8 @@
 
 #include "SetMeal.h"
 #include "Order.h"
+#include "Map/MapData.h"
+
 
 struct FileSystemWidgetControls {
 	QLineEdit* dataPathLineEdit;
@@ -31,15 +33,12 @@ public:
 	
 	void setDataPath();
 
-	void loadData();
-	void saveData();
-
-	void saveSetMeals();
 public slots:
 	void showFileSystemWidget();
 	std::vector<SetMeal*> loadSetMeals();
 	std::vector<std::string> loadAddresses();
 	std::vector<Order> loadOrders();
+	MapData loadMap();
 	void saveOrdersToFile(const std::vector<Order>& orders);
 };
 

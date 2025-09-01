@@ -120,6 +120,51 @@ std::vector<Order> FileSystem::loadOrders(){
 	return orders;
 }
 
+MapData FileSystem::loadMap(){
+	std::fstream file;
+	file.open(m_dataPath + "addresses.txt", std::ios::in);
+	if (!file)
+	{
+		QMessageBox::critical(nullptr, QString::fromUtf8("错误"), QString::fromUtf8("无法打开地址数据文件！"));
+		return MapData();
+	}
+	MapData mapData;
+	std::string line;
+	while (getline(file, line))
+	{
+		std::istringstream iss(line);
+		std::string a, b;
+		double l;
+		iss >> a >> b >> l;
+		if (mapData.myMap.find(a) == mapData.myMap.end())
+		{
+			mapData.myMap[a] = mapData.map.size();
+			mapData.map.push_back(a);
+			mapData.arcs.emplace_back(mapData.map.size(), 0);
+			for (int i = 0; i < mapData.arcs.size(); i++)
+			{
+				mapData.arcs[i].resize(mapData.map.size(), 0);
+			}
+		}
+		if (mapData.myMap.find(b) == mapData.myMap.end())
+		{
+			mapData.myMap[b] = mapData.map.size();
+			mapData.map.push_back(b);
+			mapData.arcs.emplace_back(mapData.map.size(), 0);
+			for (int i = 0; i < mapData.arcs.size(); i++)
+			{
+				mapData.arcs[i].resize(mapData.map.size(), 0);
+			}
+		}
+		int k = mapData.myMap[a];
+		int j = mapData.myMap[b];
+		mapData.arcs[k][j] = l;
+		mapData.arcs[j][k] = l;
+	}
+	return mapData;
+	file.close();
+}
+
 void FileSystem::saveOrdersToFile(const std::vector<Order>& orders){
 	std::ofstream file(m_dataPath + "orders.txt");
 	if (!file.is_open()) {

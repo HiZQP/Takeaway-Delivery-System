@@ -25,6 +25,7 @@ private:
 	OrderManager* m_orderManager;
 
 	void connectSignalsAndSlots();
+    void setupOrderTable();
 private slots:
     void updateTime();
 };

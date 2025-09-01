@@ -53,8 +53,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>704</width>
+                   <height>387</height>
                   </rect>
                  </property>
                 </widget>
@@ -116,8 +116,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
-                     <height>28</height>
+                     <width>224</width>
+                     <height>317</height>
                     </rect>
                    </property>
                   </widget>
@@ -263,7 +263,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_3">
+               <widget class="QPushButton" name="orderEditButton">
                 <property name="text">
                  <string>编辑订单</string>
                 </property>
@@ -290,7 +290,55 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QTableWidget" name="tableWidget"/>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;待配送订单：&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="waitingOrderTable">
+              <column>
+               <property name="text">
+                <string>订单号</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>收货人姓名</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>收货人电话</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>收货地址</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>套餐编号</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>套餐数量</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>总金额</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>下单时间</string>
+               </property>
+              </column>
+             </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -308,19 +356,23 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_7">
+               <widget class="QLabel" name="label_3">
                 <property name="text">
-                 <string>开始派送</string>
+                 <string>骑手当前位置：</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_6">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
+               <widget class="QLabel" name="stratPointLabel">
                 <property name="text">
-                 <string>停止派送</string>
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="deliverButton">
+                <property name="text">
+                 <string>配送</string>
                 </property>
                </widget>
               </item>
@@ -398,7 +450,7 @@
      <x>0</x>
      <y>0</y>
      <width>1028</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

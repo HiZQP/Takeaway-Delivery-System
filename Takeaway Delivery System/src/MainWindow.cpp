@@ -9,8 +9,12 @@ void MainWindow::connectSignalsAndSlots() {
 	connect(ui.settalPushButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::showSettleWidget);
 	connect(ui.clearAllBasketSetMealsButton, &QPushButton::clicked, m_setMealManager, &SetMealManager::clearAllBasketSetMeals);
 	connect(ui.fileSettingButton, &QAction::triggered, m_fileSystem, &FileSystem::showFileSystemWidget);
+	connect(ui.orderEditButton, &QPushButton::clicked, this, [this]() {
+		m_orderManager->showOrderEditWidget(ui.orderListTable);
+		});
 	connect(m_orderManager, &OrderManager::ordersChanged, this, [this]() {
 		m_orderManager->showAllOrders(ui.orderListTable);
+		m_orderManager->showWatingOrders(ui.waitingOrderTable);
 		});
 	connect(ui.fliterLineEdit, &QLineEdit::textChanged, this, [this]() {
 		m_orderManager->showFlitteredOrders(ui.orderListTable, ui.fliterLineEdit);
@@ -28,10 +32,17 @@ void MainWindow::connectSignalsAndSlots() {
 		});
 	connect(ui.loadAddresses, &QAction::triggered, this, [this]() {
 		m_setMealManager->loadAddresses(m_fileSystem->loadAddresses());
+		m_orderManager->loadMap(m_fileSystem->loadMap());
 		});
 	connect(ui.loadOrders, &QAction::triggered, this, [this]() {
 		m_orderManager->loadOrders(m_fileSystem->loadOrders());
 		});
+}
+
+void MainWindow::setupOrderTable()
+{
+	ui.orderListTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui.orderListTable->setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 MainWindow::MainWindow(QWidget* parent)
@@ -40,6 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
 	m_setMealManager = new SetMealManager("res/setMeals.txt");
 	m_fileSystem = new FileSystem();
 	m_orderManager = new OrderManager();
+	setupOrderTable();
 
 	m_setMealManager->showAllShelvesSetMeals();
 
