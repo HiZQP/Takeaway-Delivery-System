@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
-#include <QObject>
 
 #include "MapData.h"
 
@@ -16,13 +15,11 @@ struct ShortestPath {
 	float pathLength;
 };
 
-class Map : public QObject{
-	Q_OBJECT
-
+class Map {
 private:
 	MapData m_mapData;
-	std::vector<std::vector<int>> m_path;//Â·¾¶Ç°Çı½Úµã¾ØÕó
-	std::vector<std::vector<double>>m_D;//Â·¾¶×î¶Ì³¤¶È¾ØÕó
+	std::vector<std::vector<int>> m_path;//è·¯å¾„å‰é©±èŠ‚ç‚¹çŸ©é˜µ
+	std::vector<std::vector<float>>m_D;//è·¯å¾„æœ€çŸ­é•¿åº¦çŸ©é˜µ
 	
 public:
 	Map();

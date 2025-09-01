@@ -20,7 +20,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -53,8 +53,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>704</width>
-                   <height>387</height>
+                   <width>98</width>
+                   <height>28</height>
                   </rect>
                  </property>
                 </widget>
@@ -116,8 +116,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>224</width>
-                     <height>317</height>
+                     <width>98</width>
+                     <height>28</height>
                     </rect>
                    </property>
                   </widget>
@@ -266,13 +266,6 @@
                <widget class="QPushButton" name="orderEditButton">
                 <property name="text">
                  <string>编辑订单</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pushButton_4">
-                <property name="text">
-                 <string>取消订单</string>
                 </property>
                </widget>
               </item>
@@ -450,7 +443,7 @@
      <x>0</x>
      <y>0</y>
      <width>1028</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -473,7 +466,7 @@
      <string>调试</string>
     </property>
     <addaction name="startWorkButton"/>
-    <addaction name="action_5"/>
+    <addaction name="afterWorkButton"/>
     <addaction name="separator"/>
    </widget>
    <addaction name="menu"/>
@@ -508,7 +501,7 @@
     <string>上班</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="afterWorkButton">
    <property name="text">
     <string>下班</string>
    </property>

@@ -110,7 +110,7 @@
     <QtMoc Include="src\SetMeal.h" />
     <QtMoc Include="src\FileSystem.h" />
     <QtMoc Include="src\OrderManager.h" />
-    <QtMoc Include="src\Map\Map.h" />
+    <ClInclude Include="src\Map\Map.h" />
     <ClInclude Include="src\Map\MapData.h" />
     <ClInclude Include="src\myUtils.h" />
     <ClInclude Include="src\Order.h" />

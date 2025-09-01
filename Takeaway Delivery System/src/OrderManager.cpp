@@ -4,7 +4,8 @@
 
 void OrderManager::connectSignalsAndSlots() {
 	connect(m_orderEditControls.saveButton, &QPushButton::clicked, this, &OrderManager::saveOrderEdit);
-	connect(m_deliveryControls.deliverButton, &QPushButton::clicked, this, &OrderManager::);
+	connect(m_deliveryControls.deliverButton, &QPushButton::clicked, this, &OrderManager::deliverOrder);
+	connect(m_orderEditControls.cancelOrderButton, &QPushButton::clicked, this, &OrderManager::cancelOrder);
 }
 
 void OrderManager::setupOrderEditWidget(){
@@ -29,25 +30,42 @@ void OrderManager::setupOrderEditWidget(){
 	m_orderEditControls.consigneeLineEdit = new QLineEdit();
 	m_orderEditControls.phoneLineEdit = new QLineEdit();
 
+	QHBoxLayout* hLayout = new QHBoxLayout();
 	m_orderEditControls.saveButton = new QPushButton();
 	m_orderEditControls.saveButton->setText(QString::fromUtf8("保存修改"));
+	m_orderEditControls.cancelOrderButton = new QPushButton();
+	m_orderEditControls.cancelOrderButton->setText(QString::fromUtf8("取消订单"));
 
 	vLayout->addWidget(label1);
 	vLayout->addWidget(m_orderEditControls.orderIDLabel);
 	formLayout->addRow(label2, m_orderEditControls.consigneeLineEdit);
 	formLayout->addRow(label3, m_orderEditControls.phoneLineEdit);
 	vLayout->addLayout(formLayout);
-	vLayout->addWidget(m_orderEditControls.saveButton);
+	hLayout->addWidget(m_orderEditControls.saveButton);
+	hLayout->addWidget(m_orderEditControls.cancelOrderButton);
+	vLayout->addLayout(hLayout);
 }
 
 void OrderManager::setupDeliveryWidget() {
 	m_deliveryWidget = new QWidget();
 	QVBoxLayout* vLayout = new QVBoxLayout(m_deliveryWidget);
 	QFormLayout* formLayout = new QFormLayout();
+	formLayout->setLabelAlignment(Qt::AlignRight);
 
 	QLabel* label1 = new QLabel();
 	label1->setText(QString::fromUtf8("配送信息"));
 	label1->setAlignment(Qt::AlignCenter);
+	QFont Font = label1->font();
+	Font.setPointSize(14);
+	Font.setBold(true);
+	label1->setFont(Font);
+
+	QLabel* label4 = new QLabel();
+	label4->setText(QString::fromUtf8("起点："));
+	m_deliveryControls.stratPoint = new QLabel();
+	QLabel* label5 = new QLabel();
+	label5->setText(QString::fromUtf8("终点："));
+	m_deliveryControls.endPoint = new QLabel();
 
 	QLabel* label2 = new QLabel();
 	label2->setText(QString::fromUtf8("最短路线："));
@@ -57,7 +75,10 @@ void OrderManager::setupDeliveryWidget() {
 	m_deliveryControls.distenceLabel = new QLabel();
 
 	m_deliveryControls.deliverButton = new QPushButton();
+	m_deliveryControls.deliverButton->setText(QString::fromUtf8("确定配送"));
 
+	formLayout->addRow(label4, m_deliveryControls.stratPoint);
+	formLayout->addRow(label5, m_deliveryControls.endPoint);
 	formLayout->addRow(label2, m_deliveryControls.pathLabel);
 	formLayout->addRow(label3, m_deliveryControls.distenceLabel);
 	vLayout->addWidget(label1);
@@ -87,6 +108,8 @@ void OrderManager::loadOrders(const std::vector<Order>& orders){
 
 void OrderManager::loadMap(const MapData& mapdata){
 	m_map.loadMap(mapdata);
+	m_nowPoint = mapdata.map[0];
+	emit ordersChanged();
 }
 
 void OrderManager::showAllOrders(QTableWidget* orderTable) {
@@ -191,10 +214,55 @@ void OrderManager::saveOrderEdit(){
 void OrderManager::showDeliveryWidget(){
 	for (std::vector<Order>::reverse_iterator it = m_orders.rbegin(); it != m_orders.rend(); ++it) {
 		if (it->orderStatus == "待配送") {
-			m_deliveryControls.pathLabel
+			ShortestPath shortestPath = m_map.floyd(m_nowPoint, it->address);
+			m_deliveryControls.stratPoint->setText(QString::fromUtf8(m_nowPoint));
+			m_deliveryControls.endPoint->setText(QString::fromUtf8(it->address));
+			m_deliveryControls.pathLabel->setText(QString::fromUtf8(shortestPath.path)); 
+			m_deliveryControls.distenceLabel->setText(QString::number(shortestPath.pathLength));
+			m_deliveryWidget->show();
 			break;
 		}
 	}
+}
+
+void OrderManager::deliverOrder(){
+	for (std::vector<Order>::reverse_iterator it = m_orders.rbegin(); it != m_orders.rend(); ++it) {
+		if (it->orderStatus == "待配送") {
+			it->orderStatus = "已配送";
+			m_nowPoint = it->address;
+			m_deliveryWidget->close();
+			emit ordersChanged();
+			break;
+		}
+	}
+}
+
+void OrderManager::cancelOrder(){
+	if (m_orders[m_selectedRow].orderStatus == "已配送") {
+		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已配送，取消无效！"));
+		return;
+	}
+	m_orders[m_selectedRow].orderStatus = "已取消";
+	QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已取消！"));
+	m_orderEditWidget->close();
+
+	emit ordersChanged();
+}
+
+void OrderManager::CAN_I_GET_OFF_WORK(){
+	for (auto order : m_orders) {
+		if (order.orderStatus == "待配送") {
+			QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("仍有订单未完成，不能下班！"));
+			return;
+		}
+	}
+	QMessageBox msgBox;
+	msgBox.setWindowTitle(QString::fromUtf8("下班了！"));
+	msgBox.setText(QString::fromUtf8("感谢使用本系统！"));
+	msgBox.setStandardButtons(QMessageBox::Ok);
+	msgBox.setDefaultButton(QMessageBox::Ok);
+	int result = msgBox.exec();
+	emit HappyHappyHappy(m_orders);
 }
 
 void OrderManager::receiveNewOrder(

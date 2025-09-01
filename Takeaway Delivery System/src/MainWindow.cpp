@@ -15,17 +15,19 @@ void MainWindow::connectSignalsAndSlots() {
 	connect(m_orderManager, &OrderManager::ordersChanged, this, [this]() {
 		m_orderManager->showAllOrders(ui.orderListTable);
 		m_orderManager->showWatingOrders(ui.waitingOrderTable);
+		ui.stratPointLabel->setText(QString::fromUtf8(m_orderManager->getNowPoint()));
 		});
 	connect(ui.fliterLineEdit, &QLineEdit::textChanged, this, [this]() {
 		m_orderManager->showFlitteredOrders(ui.orderListTable, ui.fliterLineEdit);
 		});
-	connect(m_orderManager, &OrderManager::saveOrders, m_fileSystem, &FileSystem::saveOrdersToFile);
+	connect(ui.deliverButton, &QPushButton::clicked, m_orderManager, &OrderManager::showDeliveryWidget);
 	connect(m_setMealManager, &SetMealManager::newOrderPlaced, m_orderManager, &OrderManager::receiveNewOrder);
 	// 加载 
 	connect(ui.startWorkButton, &QAction::triggered, this, [this]() {
 		m_setMealManager->loadSetMeals(m_fileSystem->loadSetMeals());
 		m_setMealManager->loadAddresses(m_fileSystem->loadAddresses());
 		m_orderManager->loadOrders(m_fileSystem->loadOrders());
+		m_orderManager->loadMap(m_fileSystem->loadMap());
 		});
 	connect(ui.loadSetMeals, &QAction::triggered, this, [this]() {
 		m_setMealManager->loadSetMeals(m_fileSystem->loadSetMeals());
@@ -37,6 +39,10 @@ void MainWindow::connectSignalsAndSlots() {
 	connect(ui.loadOrders, &QAction::triggered, this, [this]() {
 		m_orderManager->loadOrders(m_fileSystem->loadOrders());
 		});
+	// 退出
+	connect(ui.afterWorkButton, &QAction::triggered, m_orderManager, &OrderManager::CAN_I_GET_OFF_WORK);
+	connect(m_orderManager, &OrderManager::HappyHappyHappy, m_fileSystem, &FileSystem::saveOrdersToFile);
+	connect(m_orderManager, &OrderManager::HappyHappyHappy, this, &QApplication::quit);
 }
 
 void MainWindow::setupOrderTable()

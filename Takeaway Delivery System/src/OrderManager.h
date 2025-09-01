@@ -16,9 +16,12 @@ struct OrderEditWidgetControls {
 	QLineEdit* consigneeLineEdit;
 	QLineEdit* phoneLineEdit;
 	QPushButton* saveButton;
+	QPushButton* cancelOrderButton;
 };
 
 struct DeliveryWidgetControls {
+	QLabel* stratPoint;
+	QLabel* endPoint;
 	QLabel* pathLabel;
 	QLabel* distenceLabel;
 	QPushButton* deliverButton;
@@ -28,12 +31,12 @@ class OrderManager : public QObject {
 	Q_OBJECT
 
 signals:
-	void saveOrders(const std::vector<Order>& orders);
+	void HappyHappyHappy(const std::vector<Order>& orders);
 	void ordersChanged();
 private:
 	std::vector<Order> m_orders;
 	Map m_map;
-	std::string stratPoint;
+	std::string m_nowPoint;
 
 	int m_selectedRow;
 
@@ -52,6 +55,8 @@ public:
 
 	void loadOrders(const std::vector<Order>& orders);
 	void loadMap(const MapData& mapdata);
+
+	std::string getNowPoint() const { return m_nowPoint; }
 public slots:
 	void showAllOrders(QTableWidget* orderTable);
 	void showWatingOrders(QTableWidget* orderTable);
@@ -59,6 +64,9 @@ public slots:
 	void showOrderEditWidget(QTableWidget* orderTable);
 	void saveOrderEdit();
 	void showDeliveryWidget();
+	void deliverOrder();
+	void cancelOrder();
+	void CAN_I_GET_OFF_WORK();
 	void receiveNewOrder(
 		const std::string& orderId,
 		const std::string& consignee,
