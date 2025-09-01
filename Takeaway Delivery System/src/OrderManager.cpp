@@ -160,7 +160,7 @@ void OrderManager::showFlitteredOrders(QTableWidget* orderTable, QLineEdit* line
 	std::string fliter = lineEdit->text().toStdString();
 	std::vector<Order> fliteredOrders;
 	int row = 0;
-	for (auto order : m_orders) {
+	for (auto& order : m_orders) {
 		if (order.orderId.find(fliter) != std::string::npos || order.consignee.find(fliter) != std::string::npos) {
 			orderTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(order.orderId)));
 			orderTable->setItem(row, 1, new QTableWidgetItem(QString::fromStdString(order.consignee)));
@@ -180,11 +180,18 @@ void OrderManager::showOrderEditWidget(QTableWidget* orderTable)
 {
 	if (orderTable->selectedItems().isEmpty())
 		return;
-	m_selectedRow = 0;
-	m_selectedRow = orderTable->selectedItems().first()->row();
-	m_orderEditControls.orderIDLabel->setText(QString::fromStdString(m_orders[m_selectedRow].orderId));
-	m_orderEditControls.consigneeLineEdit->setText(QString::fromStdString(m_orders[m_selectedRow].consignee));
-	m_orderEditControls.phoneLineEdit->setText(QString::fromStdString(m_orders[m_selectedRow].phone));
+	int selectedRow = orderTable->selectedItems().first()->row();
+	QTableWidgetItem* item = orderTable->item(selectedRow, 0);
+	m_selectedOrderID = item->text().toStdString();
+	for (auto& order : m_orders) {
+		if (m_selectedOrderID == order.orderId) {
+			m_orderEditControls.orderIDLabel->setText(QString::fromStdString(order.orderId));
+			m_orderEditControls.consigneeLineEdit->setText(QString::fromStdString(order.consignee));
+			m_orderEditControls.phoneLineEdit->setText(QString::fromStdString(order.phone));
+			break;
+		}
+	}
+	
 	m_orderEditWidget->show();
 }
 
@@ -200,10 +207,13 @@ void OrderManager::saveOrderEdit(){
 		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("请输入有效的11位电话号码！"));
 		return;
 	}
-
-	m_orders[m_selectedRow].consignee = consignee;
-	m_orders[m_selectedRow].phone = phone;
-
+	for (auto& order : m_orders) {
+		if (m_selectedOrderID == order.orderId) {
+			order.consignee = consignee;
+			order.phone = phone;
+			break;
+		}
+	}
 	m_orderEditControls.consigneeLineEdit->clear();
 	m_orderEditControls.phoneLineEdit->clear();
 	m_orderEditWidget->close();
@@ -218,7 +228,7 @@ void OrderManager::showDeliveryWidget(){
 			m_deliveryControls.stratPoint->setText(QString::fromUtf8(m_nowPoint));
 			m_deliveryControls.endPoint->setText(QString::fromUtf8(it->address));
 			m_deliveryControls.pathLabel->setText(QString::fromUtf8(shortestPath.path)); 
-			m_deliveryControls.distenceLabel->setText(QString::number(shortestPath.pathLength));
+			m_deliveryControls.distenceLabel->setText(QString::fromUtf8(std::to_string(shortestPath.pathLength) + "km"));
 			m_deliveryWidget->show();
 			break;
 		}
@@ -238,19 +248,24 @@ void OrderManager::deliverOrder(){
 }
 
 void OrderManager::cancelOrder(){
-	if (m_orders[m_selectedRow].orderStatus == "已配送") {
-		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已配送，取消无效！"));
-		return;
+	for (auto& order : m_orders) {
+		if (m_selectedOrderID == order.orderId) {
+			if (order.orderStatus == "已配送") {
+				QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已配送，取消无效！"));
+				return;
+			}
+			order.orderStatus = "已取消";
+			QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已取消！"));
+			break;
+		}
 	}
-	m_orders[m_selectedRow].orderStatus = "已取消";
-	QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已取消！"));
 	m_orderEditWidget->close();
 
 	emit ordersChanged();
 }
 
 void OrderManager::CAN_I_GET_OFF_WORK(){
-	for (auto order : m_orders) {
+	for (auto& order : m_orders) {
 		if (order.orderStatus == "待配送") {
 			QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("仍有订单未完成，不能下班！"));
 			return;

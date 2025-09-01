@@ -37,8 +37,7 @@ private:
 	std::vector<Order> m_orders;
 	Map m_map;
 	std::string m_nowPoint;
-
-	int m_selectedRow;
+	std::string m_selectedOrderID;
 
 	OrderEditWidgetControls m_orderEditControls;
 	QWidget* m_orderEditWidget;
