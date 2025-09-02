@@ -32,7 +32,7 @@ void StatsManager::setupDailyOrdersStatsWidget() {
 	QVBoxLayout* vLayout = new QVBoxLayout(m_dailyOrdersStatsWidget);
 	m_dailyOrdersControls.orderTable = new QTableWidget();
 
-	QLabel* titleLabel = new QLabel(QString::fromUtf8("当日订单统计"));
+	QLabel* titleLabel = new QLabel(QString::fromUtf8("当天订单统计"));
 	QFont Font = titleLabel->font();
 	Font.setPointSize(16);
 	titleLabel->setFont(Font);
@@ -53,7 +53,7 @@ void StatsManager::setupMonthlyOrdersStatsWidget() {
 	QVBoxLayout* vLayout = new QVBoxLayout(m_monthlyOrdersStatsWidget);
 	m_monthlyOrdersControls.orderTable = new QTableWidget();
 
-	QLabel* titleLabel = new QLabel(QString::fromUtf8("每月套餐热销统计"));
+	QLabel* titleLabel = new QLabel(QString::fromUtf8("当月套餐热销统计"));
 	QFont Font = titleLabel->font();
 	Font.setPointSize(16);
 	titleLabel->setFont(Font);
@@ -124,7 +124,7 @@ void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, cons
 	std::vector<Order> fliteredOrders;
 	for (const auto& order : orders) {
 		std::string orderMonth = order.orderId.substr(4, 2);
-		if (nowMonth == orderMonth)
+		if (nowMonth == orderMonth && order.orderStatus != "已取消")
 			fliteredOrders.push_back(order);
 	}
 	
@@ -134,8 +134,8 @@ void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, cons
 		std::stringstream ss_setMeal;
 		ss_setMeal << order.setMealID;
 		ss_count << order.setMealCount;
-		std::string temp_count;
-		std::string temp_setMeal;
+		std::string temp_count = {};
+		std::string temp_setMeal = {};
 		while (std::getline(ss_setMeal, temp_setMeal, '/')) {
 			std::getline(ss_count, temp_count, '/');
 			if (!temp_setMeal.empty()) {
@@ -146,7 +146,7 @@ void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, cons
 			}
 		}
 	}
-
+	m_monthlyOrdersControls.orderTable->setSortingEnabled(false);
 	m_monthlyOrdersControls.orderTable->setRowCount(setMeals.size());
 
 	int row = 0;

@@ -30,7 +30,7 @@ struct BasketWidgetControls {
 };
 
 struct detailsWidgetControls {
-	QLineEdit* idLineEdit;
+	QLabel* idLabel;
 	QLineEdit* nameLineEdit;
 	QTextEdit* descriptionTextEdit;
 	QLineEdit* priceLineEdit;
@@ -68,6 +68,7 @@ private:
 
 	void setupShelvesWidget(const std::string& id, const std::string& name, const int& price, const int& status);
 	void setupBasketWidget(const std::string& id, const std::string& name);
+	void setupDetailsWidget();
 public:
 	SetMeal(const std::string& id, const std::string& name, const std::string& description, const int& price, const int& status);
 	~SetMeal();
@@ -86,8 +87,8 @@ public:
 public slots:
 	void addToCount();
 	void subFromCount();
-	void createDetailsWidget();
 	void editDetails();
 	void saveDetails();
+	void showDetailsWidget();
 };
 

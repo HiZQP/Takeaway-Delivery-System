@@ -79,8 +79,6 @@ void SetMealManager::createSettleWidget() {
 	formLayout->addRow(phoneLabel, m_settleControls.phoneLineEdit);
 	vLayout->addWidget(orderDetailsScrollArea);
 	vLayout->addLayout(buttonLayout);
-
-	//connect(m_settleControls.settleButton, &QPushButton::clicked, this, &SetMealManager::settleBasket);
 }
 
 SetMealManager::SetMealManager(const std::string& filename){
