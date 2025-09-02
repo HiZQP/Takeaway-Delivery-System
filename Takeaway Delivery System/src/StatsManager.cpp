@@ -70,9 +70,33 @@ void StatsManager::setupMonthlyOrdersStatsWidget() {
 	vLayout->addWidget(m_monthlyOrdersControls.orderTable);
 }
 
+void StatsManager::setupAddressOrdersStatsWidget() {
+	m_addressOrdersStatsWidget = new QWidget();
+	m_addressOrdersStatsWidget->setFixedWidth(340);
+	QVBoxLayout* vLayout = new QVBoxLayout(m_addressOrdersStatsWidget);
+	m_addressOrdersControls.orderTable = new QTableWidget();
+
+	QLabel* titleLabel = new QLabel(QString::fromUtf8("配送地址订单统计"));
+	QFont Font = titleLabel->font();
+	Font.setPointSize(16);
+	titleLabel->setFont(Font);
+
+	m_addressOrdersControls.orderTable->setColumnCount(3);
+	QStringList headerLabels;
+	headerLabels << "地点" << "订单数量" << "营收";
+	m_addressOrdersControls.orderTable->setHorizontalHeaderLabels(headerLabels);
+	// 数据加载完成后调用这句进行排序
+	// m_monthlyOrdersControls.orderTable->sortItems(1, Qt::DescendingOrder);
+	m_addressOrdersControls.orderTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+	vLayout->addWidget(titleLabel);
+	vLayout->addWidget(m_addressOrdersControls.orderTable);
+}
+
 StatsManager::StatsManager() {
 	setupDailyOrdersStatsWidget();
 	setupMonthlyOrdersStatsWidget();
+	setupAddressOrdersStatsWidget();
 	//setupAllStatsWidget();
 }
 
@@ -80,6 +104,7 @@ StatsManager::~StatsManager() {
 	delete m_dailyOrdersStatsWidget;
 	delete m_monthlyOrdersStatsWidget;
 	delete m_allStatsWidget;
+	delete m_addressOrdersStatsWidget;
 }
 
 void StatsManager::showDailyOrdersStats(const std::vector<Order>& orders) {
@@ -124,7 +149,7 @@ void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, cons
 	std::vector<Order> fliteredOrders;
 	for (const auto& order : orders) {
 		std::string orderMonth = order.orderId.substr(4, 2);
-		if (nowMonth == orderMonth && order.orderStatus != "已取消")
+		if (nowMonth == orderMonth && order.orderStatus == "已配送")
 			fliteredOrders.push_back(order);
 	}
 	
@@ -169,5 +194,37 @@ void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, cons
 	m_monthlyOrdersControls.orderTable->setSortingEnabled(true);
 	m_monthlyOrdersControls.orderTable->sortItems(1, Qt::DescendingOrder);
 	m_monthlyOrdersStatsWidget->show();
+}
+
+void StatsManager::showAddressOrdersStats(const std::vector<Order>& orders) {
+	m_addressOrdersControls.orderTable->clearContents();
+	std::unordered_map<std::string, std::pair<int, int>> fliteredOrders;
+	std::vector<int> totalPrice;
+	for (const auto& order : orders) {
+		if (fliteredOrders.find(order.address) != fliteredOrders.end()) {
+			fliteredOrders[order.address].first++;
+			fliteredOrders[order.address].second += order.totalPrice;
+		}
+		else
+			fliteredOrders.emplace(order.address, std::pair(1, order.totalPrice));
+	}
+	m_addressOrdersControls.orderTable->setSortingEnabled(false);
+	m_addressOrdersControls.orderTable->setRowCount(fliteredOrders.size());
+	
+	int row = 0;
+	for (const auto& pair : fliteredOrders) {
+		m_addressOrdersControls.orderTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(pair.first)));
+		QTableWidgetItem* countItem = new QTableWidgetItem();
+		countItem->setData(Qt::DisplayRole, pair.second.first); // 设置为数字类型
+		m_addressOrdersControls.orderTable->setItem(row, 1, countItem);
+
+		QTableWidgetItem* priceItem = new QTableWidgetItem();
+		priceItem->setData(Qt::DisplayRole, pair.second.second); // 设置为数字类型
+		m_addressOrdersControls.orderTable->setItem(row, 2, priceItem);
+		row++;
+	}
+	m_addressOrdersControls.orderTable->setSortingEnabled(true);
+	m_addressOrdersControls.orderTable->sortItems(1, Qt::DescendingOrder);
+	m_addressOrdersStatsWidget->show();
 }
 

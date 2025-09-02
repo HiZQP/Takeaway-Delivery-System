@@ -30,8 +30,12 @@ void MainWindow::connectSignalsAndSlots() {
 	connect(ui.monthlyStats, &QAction::triggered, this, [this]() {
 		m_statsManager->showMonthlyOrdersStats(m_orderManager->getOrders(), m_setMealManager->getSetmeals());
 		});
+	connect(ui.addressStats, &QAction::triggered, this, [this]() {
+		m_statsManager->showAddressOrdersStats(m_orderManager->getOrders());
+		});
 	connect(ui.allStats, &QAction::triggered, this, [this]() {
 		m_statsManager->showDailyOrdersStats(m_orderManager->getOrders());
+		m_statsManager->showAddressOrdersStats(m_orderManager->getOrders());
 		m_statsManager->showMonthlyOrdersStats(m_orderManager->getOrders(), m_setMealManager->getSetmeals());
 		});
 	// 加载 
@@ -40,6 +44,8 @@ void MainWindow::connectSignalsAndSlots() {
 		m_setMealManager->loadAddresses(m_fileSystem->loadAddresses());
 		m_orderManager->loadOrders(m_fileSystem->loadOrders());
 		m_orderManager->loadMap(m_fileSystem->loadMap());
+		ui.afterWorkButton->setEnabled(true);
+		ui.startWorkButton->setEnabled(false);
 		});
 	connect(ui.loadSetMeals, &QAction::triggered, this, [this]() {
 		m_setMealManager->loadSetMeals(m_fileSystem->loadSetMeals());
@@ -76,6 +82,8 @@ MainWindow::MainWindow(QWidget* parent)
 
 	setupOrderTable();
 	this->setWindowTitle(QString::fromUtf8("宅急送订餐管理系统"));
+
+	ui.afterWorkButton->setEnabled(false);
 
 	m_setMealManager->showAllShelvesSetMeals();
 
