@@ -26,6 +26,10 @@ void OrderManager::setupOrderEditWidget(){
 	label2->setText(QString::fromUtf8("收货人姓名："));
 	QLabel* label3 = new QLabel();
 	label3->setText(QString::fromUtf8("收货人电话："));
+	QLabel* label4 = new QLabel();
+	label4->setText(QString::fromUtf8("地址："));
+
+	m_orderEditControls.addressComboBox = new QComboBox();
 
 	m_orderEditControls.consigneeLineEdit = new QLineEdit();
 	m_orderEditControls.phoneLineEdit = new QLineEdit();
@@ -40,6 +44,7 @@ void OrderManager::setupOrderEditWidget(){
 	vLayout->addWidget(m_orderEditControls.orderIDLabel);
 	formLayout->addRow(label2, m_orderEditControls.consigneeLineEdit);
 	formLayout->addRow(label3, m_orderEditControls.phoneLineEdit);
+	formLayout->addRow(label4, m_orderEditControls.addressComboBox);
 	vLayout->addLayout(formLayout);
 	hLayout->addWidget(m_orderEditControls.saveButton);
 	hLayout->addWidget(m_orderEditControls.cancelOrderButton);
@@ -109,6 +114,8 @@ void OrderManager::loadOrders(const std::vector<Order>& orders){
 void OrderManager::loadMap(const MapData& mapdata){
 	m_map.loadMap(mapdata);
 	m_nowPoint = mapdata.map[0];
+	for (const auto& address : mapdata.map)
+		m_orderEditControls.addressComboBox->addItem(QString::fromStdString(address));
 	emit ordersChanged();
 }
 
@@ -181,6 +188,11 @@ void OrderManager::showOrderEditWidget(QTableWidget* orderTable)
 	if (orderTable->selectedItems().isEmpty())
 		return;
 	int selectedRow = orderTable->selectedItems().first()->row();
+	QTableWidgetItem* status = orderTable->item(selectedRow, 8);
+	if ("待配送" != status->text().toStdString()) {
+		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("该订单无法修改！"));
+		return;
+	}
 	QTableWidgetItem* item = orderTable->item(selectedRow, 0);
 	m_selectedOrderID = item->text().toStdString();
 	for (auto& order : m_orders) {
@@ -211,9 +223,11 @@ void OrderManager::saveOrderEdit(){
 		if (m_selectedOrderID == order.orderId) {
 			order.consignee = consignee;
 			order.phone = phone;
+			order.address = m_orderEditControls.addressComboBox->currentText().toStdString();
 			break;
 		}
 	}
+
 	m_orderEditControls.consigneeLineEdit->clear();
 	m_orderEditControls.phoneLineEdit->clear();
 	m_orderEditWidget->close();
@@ -250,10 +264,6 @@ void OrderManager::deliverOrder(){
 void OrderManager::cancelOrder(){
 	for (auto& order : m_orders) {
 		if (m_selectedOrderID == order.orderId) {
-			if (order.orderStatus == "已配送") {
-				QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已配送，取消无效！"));
-				return;
-			}
 			order.orderStatus = "已取消";
 			QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("订单已取消！"));
 			break;

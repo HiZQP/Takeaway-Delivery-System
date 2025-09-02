@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QFormLayout>
 #include <QPushButton>
+#include <QComboBox>
 #include <vector>
 
 #include "Order.h"
@@ -17,6 +18,7 @@ struct OrderEditWidgetControls {
 	QLineEdit* phoneLineEdit;
 	QPushButton* saveButton;
 	QPushButton* cancelOrderButton;
+	QComboBox* addressComboBox;
 };
 
 struct DeliveryWidgetControls {

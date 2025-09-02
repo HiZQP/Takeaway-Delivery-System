@@ -198,21 +198,26 @@ void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, cons
 
 void StatsManager::showAddressOrdersStats(const std::vector<Order>& orders) {
 	m_addressOrdersControls.orderTable->clearContents();
-	std::unordered_map<std::string, std::pair<int, int>> fliteredOrders;
+	std::vector<Order> fliteredOrders;
+	for (const auto& order : orders)
+		if (order.orderStatus == "已配送")
+			fliteredOrders.push_back(order);
+
+	std::unordered_map<std::string, std::pair<int, int>> um_fliteredOrders;
 	std::vector<int> totalPrice;
-	for (const auto& order : orders) {
-		if (fliteredOrders.find(order.address) != fliteredOrders.end()) {
-			fliteredOrders[order.address].first++;
-			fliteredOrders[order.address].second += order.totalPrice;
+	for (const auto& order : fliteredOrders) {
+		if (um_fliteredOrders.find(order.address) != um_fliteredOrders.end()) {
+			um_fliteredOrders[order.address].first++;
+			um_fliteredOrders[order.address].second += order.totalPrice;
 		}
 		else
-			fliteredOrders.emplace(order.address, std::pair(1, order.totalPrice));
+			um_fliteredOrders.emplace(order.address, std::pair(1, order.totalPrice));
 	}
 	m_addressOrdersControls.orderTable->setSortingEnabled(false);
-	m_addressOrdersControls.orderTable->setRowCount(fliteredOrders.size());
+	m_addressOrdersControls.orderTable->setRowCount(um_fliteredOrders.size());
 	
 	int row = 0;
-	for (const auto& pair : fliteredOrders) {
+	for (const auto& pair : um_fliteredOrders) {
 		m_addressOrdersControls.orderTable->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(pair.first)));
 		QTableWidgetItem* countItem = new QTableWidgetItem();
 		countItem->setData(Qt::DisplayRole, pair.second.first); // 设置为数字类型

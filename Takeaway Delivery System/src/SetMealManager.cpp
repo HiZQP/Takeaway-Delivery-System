@@ -106,7 +106,7 @@ void SetMealManager::setupAddSetMealWidget() {
 	m_addSetMealControls.nameLineEdit = new QLineEdit();
 	m_addSetMealControls.descriptionLineEdit = new QLineEdit();
 	m_addSetMealControls.priceSpinBox = new QSpinBox();
-	m_addSetMealControls.priceSpinBox->setMinimum(0);
+	m_addSetMealControls.priceSpinBox->setRange(0, 9999);
 	m_addSetMealControls.statusComboBox = new QComboBox();
 	m_addSetMealControls.statusComboBox->addItem(QString::fromUtf8("不可预定"));
 	m_addSetMealControls.statusComboBox->addItem(QString::fromUtf8("可预定"));

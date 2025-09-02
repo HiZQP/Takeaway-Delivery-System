@@ -25,5 +25,6 @@ public:
 	Map();
 	void loadMap(MapData mapData);
 	ShortestPath floyd(std::string start, std::string end);
+	MapData getMapData() const { return m_mapData; }
 };
 

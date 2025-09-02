@@ -179,7 +179,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="fliterLineEdit"/>
+               <widget class="QLineEdit" name="fliterLineEdit">
+                <property name="placeholderText">
+                 <string>请输入订单号或收货人姓名...</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
