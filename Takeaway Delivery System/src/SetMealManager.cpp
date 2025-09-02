@@ -17,8 +17,9 @@ void SetMealManager::loadSetMeals(const std::vector<SetMeal*>& setMeals){
 
 	m_setMeals.clear();
 	for (SetMeal* meal : setMeals) {
-		addSetMeal(meal);
+		m_setMeals.push_back(meal);
 		connect(meal, &SetMeal::countChanged, this, &SetMealManager::updateBasketSetMeals);
+		connect(meal, &SetMeal::deleteThisOrder, this, &SetMealManager::deleteSetMeal);
 	}
 	showAllShelvesSetMeals();
 }
@@ -146,18 +147,25 @@ SetMealManager::~SetMealManager(){
 	delete m_settleWidget;
 }
 
-void SetMealManager::addSetMeal(const std::string& id, const std::string& name, const std::string& description, const int& price, const int& status){
-	SetMeal* meal = new SetMeal(id, name, description, price, status);
-	m_setMeals.push_back(meal);
-}
-
-void SetMealManager::addSetMeal(SetMeal* meal){
-	m_setMeals.push_back(meal);
-}
-
 void SetMealManager::showAllShelvesSetMeals(){
 	for (SetMeal* meal : m_setMeals) {
 		m_fShelvesLayout->addWidget(meal->getShelvesWidget());
+	}
+}
+
+void SetMealManager::deleteSetMeal(std::string id) {
+	auto it = std::remove_if(m_setMeals.begin(), m_setMeals.end(),
+		[&id](SetMeal* meal) {
+			if (meal->getId() == id) {
+				delete meal; // 释放内存
+				return true; // 删除这个元素
+			}
+			return false;
+		});
+
+	if (it != m_setMeals.end()) {
+		m_setMeals.erase(it, m_setMeals.end());
+		QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("套餐已删除！"));
 	}
 }
 
@@ -185,6 +193,7 @@ void SetMealManager::saveSetMeal() {
 	SetMeal* meal = new SetMeal(id, name, description, price, status);
 	m_setMeals.push_back(meal);
 	connect(meal, &SetMeal::countChanged, this, &SetMealManager::updateBasketSetMeals);
+	connect(meal, &SetMeal::deleteThisOrder, this, &SetMealManager::deleteSetMeal);
 	showAllShelvesSetMeals();
 	QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("套餐已添加！"));
 }

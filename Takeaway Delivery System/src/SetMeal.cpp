@@ -12,6 +12,9 @@ void SetMeal::connectSignalsAndSlots(){
 	connect(m_basketControls.subButton, &QPushButton::clicked, this, &SetMeal::subFromCount);
 	connect(m_shelvesControls.labelButton, &QPushButton::clicked, this, &SetMeal::showDetailsWidget);
 	connect(m_detailsControls.editButton, &QPushButton::clicked, this, &SetMeal::editDetails);
+	connect(m_detailsControls.deleteButton, &QPushButton::clicked, this, [this]() {
+		emit deleteThisOrder(m_id);
+		});
 }
 
 void SetMeal::setupDetailsWidget(){

@@ -45,6 +45,7 @@ class SetMeal : public QObject{
 
 signals:
 	void countChanged();
+	void deleteThisOrder(std::string id);
 private:
 	std::string m_id;
 	std::string m_name;

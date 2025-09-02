@@ -66,13 +66,9 @@ public:
 
 	void loadSetMeals(const std::vector<SetMeal*>& setMeals);
 	void loadAddresses(const std::vector<std::string>& addresses);
-	void addSetMeal(const std::string& id,
-					const std::string& name,
-					const std::string& description,
-					const int& price,
-					const int& status);
-	void addSetMeal(SetMeal* meal);
+
 	void showAllShelvesSetMeals();
+	void deleteSetMeal(std::string id);
 	void saveSetMeal();
 
 	inline QVBoxLayout* getBasketLayout() { return m_fBasketLayout; }
