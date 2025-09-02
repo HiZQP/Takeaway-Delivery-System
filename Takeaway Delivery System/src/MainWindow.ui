@@ -54,7 +54,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>704</width>
-                   <height>388</height>
+                   <height>387</height>
                   </rect>
                  </property>
                 </widget>
@@ -117,7 +117,7 @@
                      <x>0</x>
                      <y>0</y>
                      <width>224</width>
-                     <height>319</height>
+                     <height>317</height>
                     </rect>
                    </property>
                   </widget>
@@ -443,7 +443,7 @@
      <x>0</x>
      <y>0</y>
      <width>1028</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -473,9 +473,9 @@
     <property name="title">
      <string>统计</string>
     </property>
-    <addaction name="action_3"/>
-    <addaction name="action_4"/>
-    <addaction name="action_5"/>
+    <addaction name="dailyStats"/>
+    <addaction name="monthlyStats"/>
+    <addaction name="allStats"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_3"/>
@@ -530,17 +530,17 @@
     <string>地址</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="dailyStats">
    <property name="text">
     <string>当天订单</string>
    </property>
   </action>
-  <action name="action_4">
+  <action name="monthlyStats">
    <property name="text">
     <string>当月套餐</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="allStats">
    <property name="text">
     <string>展示所有</string>
    </property>

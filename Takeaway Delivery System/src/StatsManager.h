@@ -4,6 +4,9 @@
 #include <QTableWidget>
 #include <QVBoxLayout>
 
+#include "Order.h"
+#include "SetMeal.h"
+
 struct AllStatsWidgetControls {
 	QVBoxLayout* vLayout;
 };
@@ -35,7 +38,10 @@ private:
 public:
 	StatsManager();
 	~StatsManager();
-public slots:
 
+	void showDailyOrdersStats(const std::vector<Order>& orders);
+	void showMonthlyOrdersStats(const std::vector<Order>& orders, std::vector<SetMeal*> setMealData);
+	void showAllOrdersStats(const std::vector<Order>& orders);
+public slots:
 };
 

@@ -56,6 +56,7 @@ public:
 	void loadMap(const MapData& mapdata);
 
 	std::string getNowPoint() const { return m_nowPoint; }
+	std::vector<Order> getOrders() const { return m_orders; }
 public slots:
 	void showAllOrders(QTableWidget* orderTable);
 	void showWatingOrders(QTableWidget* orderTable);

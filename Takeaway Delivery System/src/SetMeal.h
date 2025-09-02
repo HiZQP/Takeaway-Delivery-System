@@ -79,6 +79,7 @@ public:
 	inline std::string getName() { return m_name; }
 	inline int getCount() const { return m_count; }
 	inline int getTotalPrice() const { return m_totalPrice; }
+	inline int getPrice() const { return m_price; }
 	void setCount(const int& count);
 
 	int calculateTotalPrice();

@@ -64,6 +64,7 @@ public:
 
 	inline int getTotalPrice() const { return m_totalPrice; }
 	inline int basketHasSetMeals() const { return m_basketStatus; }
+	std::vector<SetMeal*> getSetmeals() const { return m_setMeals; }
 public slots:
 	void showSettleWidget();
 	void updateBasketSetMeals();

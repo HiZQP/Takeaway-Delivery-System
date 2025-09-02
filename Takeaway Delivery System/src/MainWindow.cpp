@@ -22,6 +22,13 @@ void MainWindow::connectSignalsAndSlots() {
 		});
 	connect(ui.deliverButton, &QPushButton::clicked, m_orderManager, &OrderManager::showDeliveryWidget);
 	connect(m_setMealManager, &SetMealManager::newOrderPlaced, m_orderManager, &OrderManager::receiveNewOrder);
+	// 统计
+	connect(ui.dailyStats, &QAction::triggered, this, [this]() {
+		m_statsManager->showDailyOrdersStats(m_orderManager->getOrders());
+		});
+	connect(ui.monthlyStats, &QAction::triggered, this, [this]() {
+		m_statsManager->showMonthlyOrdersStats(m_orderManager->getOrders(), m_setMealManager->getSetmeals());
+		});
 	// 加载 
 	connect(ui.startWorkButton, &QAction::triggered, this, [this]() {
 		m_setMealManager->loadSetMeals(m_fileSystem->loadSetMeals());
@@ -57,6 +64,8 @@ MainWindow::MainWindow(QWidget* parent)
 	m_setMealManager = new SetMealManager("res/setMeals.txt");
 	m_fileSystem = new FileSystem();
 	m_orderManager = new OrderManager();
+	m_statsManager = new StatsManager();
+
 	setupOrderTable();
 	this->setWindowTitle(QString::fromUtf8("宅急送订餐管理系统"));
 
@@ -80,6 +89,7 @@ MainWindow::~MainWindow(){
 	delete m_setMealManager;
 	delete m_fileSystem;
 	delete m_orderManager;
+	delete m_statsManager;
 }
 
 void MainWindow::updateTime() {

@@ -6,9 +6,11 @@
 #include <qtimer.h>
 #include <qdatetime.h>
 #include "vendor/qflowlayout/flowlayout.h"
+
 #include "SetMealManager.h"
 #include "FileSystem.h"
 #include "OrderManager.h"
+#include "StatsManager.h"
 
 class MainWindow : public QMainWindow{
     Q_OBJECT
@@ -23,6 +25,7 @@ private:
 	SetMealManager* m_setMealManager;
 	FileSystem* m_fileSystem;
 	OrderManager* m_orderManager;
+    StatsManager* m_statsManager;
 
 	void connectSignalsAndSlots();
     void setupOrderTable();
