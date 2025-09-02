@@ -4,6 +4,8 @@
 #include <sstream>
 #include <unordered_map>
 
+#include "myUtils.h"
+
 void StatsManager::setupAllStatsWidget() {
 	m_allStatsWidget = new QWidget();
 	m_allStatsControls.vLayout = new QVBoxLayout(m_allStatsWidget);
@@ -26,6 +28,7 @@ void StatsManager::setupAllStatsWidget() {
 
 void StatsManager::setupDailyOrdersStatsWidget() {
 	m_dailyOrdersStatsWidget = new QWidget();
+	m_dailyOrdersStatsWidget->setFixedSize(550, 120);
 	QVBoxLayout* vLayout = new QVBoxLayout(m_dailyOrdersStatsWidget);
 	m_dailyOrdersControls.orderTable = new QTableWidget();
 
@@ -46,6 +49,7 @@ void StatsManager::setupDailyOrdersStatsWidget() {
 
 void StatsManager::setupMonthlyOrdersStatsWidget() {
 	m_monthlyOrdersStatsWidget = new QWidget();
+	m_monthlyOrdersStatsWidget->setFixedWidth(340);
 	QVBoxLayout* vLayout = new QVBoxLayout(m_monthlyOrdersStatsWidget);
 	m_monthlyOrdersControls.orderTable = new QTableWidget();
 
@@ -56,7 +60,7 @@ void StatsManager::setupMonthlyOrdersStatsWidget() {
 
 	m_monthlyOrdersControls.orderTable->setColumnCount(3);
 	QStringList headerLabels;
-	headerLabels << "套餐编号" << "数量" << "金额";
+	headerLabels << "套餐编号" << "数量" << "营收";
 	m_monthlyOrdersControls.orderTable->setHorizontalHeaderLabels(headerLabels);
 	// 数据加载完成后调用这句进行排序
 	// m_monthlyOrdersControls.orderTable->sortItems(1, Qt::DescendingOrder);
@@ -79,14 +83,22 @@ StatsManager::~StatsManager() {
 }
 
 void StatsManager::showDailyOrdersStats(const std::vector<Order>& orders) {
+	std::string nowDay = utils::getFormattedLocalTime("%d");
+	std::vector<Order> fliteredOrders;
+	for (const auto& order : orders) {
+		std::string orderDay = order.orderId.substr(6, 2);
+		if (nowDay == orderDay)
+			fliteredOrders.push_back(order);
+	}
+
 	m_dailyOrdersControls.orderTable->clearContents();
 	m_dailyOrdersControls.orderTable->setRowCount(1);
 	int waitingCount = 0;
 	int deliveredCount = 0;
 	int canceledCount = 0;
-	int orderCount = orders.size();
+	int orderCount = fliteredOrders.size();
 	int totalRevenue = 0;
-	for (const auto& order : orders) {
+	for (const auto& order : fliteredOrders) {
 		if ("已配送" == order.orderStatus) {
 			deliveredCount++;
 			totalRevenue += order.totalPrice;
@@ -104,12 +116,20 @@ void StatsManager::showDailyOrdersStats(const std::vector<Order>& orders) {
 	m_dailyOrdersStatsWidget->show();
 }
 
-void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, std::vector<SetMeal*> setMealData) {
-	std::string nowMonth 
-	
+void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, const std::vector<SetMeal*>& setMealData) {
+
+	m_monthlyOrdersControls.orderTable->clearContents();
+
+	std::string nowMonth = utils::getFormattedLocalTime("%m");
+	std::vector<Order> fliteredOrders;
+	for (const auto& order : orders) {
+		std::string orderMonth = order.orderId.substr(4, 2);
+		if (nowMonth == orderMonth)
+			fliteredOrders.push_back(order);
+	}
 	
 	std::unordered_map<std::string, int> setMeals;
-	for (const auto& order : orders) {
+	for (const auto& order : fliteredOrders) {
 		std::stringstream ss_count;
 		std::stringstream ss_setMeal;
 		ss_setMeal << order.setMealID;
@@ -127,7 +147,6 @@ void StatsManager::showMonthlyOrdersStats(const std::vector<Order>& orders, std:
 		}
 	}
 
-	m_monthlyOrdersControls.orderTable->clearContents();
 	m_monthlyOrdersControls.orderTable->setRowCount(setMeals.size());
 
 	int row = 0;

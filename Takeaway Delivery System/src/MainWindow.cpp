@@ -29,6 +29,10 @@ void MainWindow::connectSignalsAndSlots() {
 	connect(ui.monthlyStats, &QAction::triggered, this, [this]() {
 		m_statsManager->showMonthlyOrdersStats(m_orderManager->getOrders(), m_setMealManager->getSetmeals());
 		});
+	connect(ui.allStats, &QAction::triggered, this, [this]() {
+		m_statsManager->showDailyOrdersStats(m_orderManager->getOrders());
+		m_statsManager->showMonthlyOrdersStats(m_orderManager->getOrders(), m_setMealManager->getSetmeals());
+		});
 	// 加载 
 	connect(ui.startWorkButton, &QAction::triggered, this, [this]() {
 		m_setMealManager->loadSetMeals(m_fileSystem->loadSetMeals());

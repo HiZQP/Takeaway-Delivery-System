@@ -40,8 +40,7 @@ public:
 	~StatsManager();
 
 	void showDailyOrdersStats(const std::vector<Order>& orders);
-	void showMonthlyOrdersStats(const std::vector<Order>& orders, std::vector<SetMeal*> setMealData);
-	void showAllOrdersStats(const std::vector<Order>& orders);
+	void showMonthlyOrdersStats(const std::vector<Order>& orders, const std::vector<SetMeal*>& setMealData);
 public slots:
 };
 
