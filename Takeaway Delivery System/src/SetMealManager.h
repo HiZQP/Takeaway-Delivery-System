@@ -1,5 +1,7 @@
 #pragma once
 #include <QObject>
+#include <QSpinBox>
+#include <QComboBox>
 
 #include <vector>
 #include "vendor/qflowlayout/flowlayout.h"
@@ -13,6 +15,15 @@ struct SettleWidgetControls {
 	QLineEdit* consigneeLineEdit;
 	QLineEdit* phoneLineEdit;
 	QLabel* totalPriceLabel;
+};
+
+struct AddSetMealWidgetControls {
+	QSpinBox* idSpinBox;
+	QLineEdit* nameLineEdit;
+	QLineEdit* descriptionLineEdit;
+	QSpinBox* priceSpinBox;
+	QComboBox* statusComboBox;
+	QPushButton* saveButton;
 };
 
 class SetMealManager : public QObject {
@@ -42,9 +53,13 @@ private:
 	SettleWidgetControls m_settleControls;
 	QWidget* m_settleWidget;
 
+	AddSetMealWidgetControls m_addSetMealControls;
+	QWidget* m_addSetMealWidget;
+
 	void connectSignalsAndSlots();
 	void calculateTotalPrice();
 	void createSettleWidget();
+	void setupAddSetMealWidget();
 public:
 	SetMealManager(const std::string& filename);
 	~SetMealManager();
@@ -58,6 +73,7 @@ public:
 					const int& status);
 	void addSetMeal(SetMeal* meal);
 	void showAllShelvesSetMeals();
+	void saveSetMeal();
 
 	inline QVBoxLayout* getBasketLayout() { return m_fBasketLayout; }
 	inline FlowLayout* getShelvesLayout() { return m_fShelvesLayout; }
@@ -67,6 +83,7 @@ public:
 	std::vector<SetMeal*> getSetmeals() const { return m_setMeals; }
 public slots:
 	void showSettleWidget();
+	void showAddSetMealWidget();
 	void updateBasketSetMeals();
 	void clearAllBasketSetMeals();
 	void settleBasket();

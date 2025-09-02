@@ -31,7 +31,7 @@ class OrderManager : public QObject {
 	Q_OBJECT
 
 signals:
-	void HappyHappyHappy(const std::vector<Order>& orders);
+	void HappyHappyHappy();
 	void ordersChanged();
 private:
 	std::vector<Order> m_orders;

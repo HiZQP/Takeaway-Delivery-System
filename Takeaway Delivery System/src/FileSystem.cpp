@@ -182,7 +182,7 @@ void FileSystem::saveOrdersToFile(const std::vector<Order>& orders) {
 	if (!file.is_open()) {
 		QMessageBox::critical(nullptr, QString::fromUtf8("错误"), QString::fromUtf8("无法写入订单数据文件！"));
 	}
-	for (auto order : orders) {
+	for (const auto& order : orders) {
 		file << S(30) order.orderId
 			 << S(12) order.consignee
 			 << S(30) order.phone
@@ -195,6 +195,21 @@ void FileSystem::saveOrdersToFile(const std::vector<Order>& orders) {
 			 << std::endl;
 	}
 	file.close();
+}
+
+void FileSystem::saveSetMealToFile(const std::vector<SetMeal*>& setMeals){
+	std::ofstream file(m_dataPath + "setMeals.txt");
+	if (!file.is_open()) {
+		QMessageBox::critical(nullptr, QString::fromUtf8("错误"), QString::fromUtf8("无法写入套餐数据文件！"));
+	}
+	for (const auto& meal : setMeals) {
+		file << S(12) meal->getId()
+			 << S(24) meal->getName()
+			 << S(100) meal->getDescription()
+			 << S(8)  meal->getPrice()
+			 << S(8)  meal->getStatus()
+			 << std::endl;
+	}
 }
 
 void FileSystem::showFileSystemWidget() {

@@ -76,11 +76,13 @@ public:
 	inline QWidget* getShelvesWidget() { return m_shelvesWidget; }
 	inline QWidget* getBasketWidget() { return m_basketWidget; }
 
-	inline std::string getId() { return m_id; }
-	inline std::string getName() { return m_name; }
+	inline std::string getId() const { return m_id; }
+	inline std::string getName() const { return m_name; }
+	inline std::string getDescription() const { return m_description; }
 	inline int getCount() const { return m_count; }
 	inline int getTotalPrice() const { return m_totalPrice; }
 	inline int getPrice() const { return m_price; }
+	inline int getStatus() const { return m_status; }
 	void setCount(const int& count);
 
 	int calculateTotalPrice();

@@ -8,6 +8,7 @@
 
 void SetMealManager::connectSignalsAndSlots(){
 	connect(m_settleControls.settleButton, &QPushButton::clicked, this, &SetMealManager::settleBasket);
+	connect(m_addSetMealControls.saveButton, &QPushButton::clicked, this, &SetMealManager::saveSetMeal);
 }
 
 void SetMealManager::loadSetMeals(const std::vector<SetMeal*>& setMeals){
@@ -81,11 +82,53 @@ void SetMealManager::createSettleWidget() {
 	vLayout->addLayout(buttonLayout);
 }
 
+void SetMealManager::setupAddSetMealWidget() {
+	m_addSetMealWidget = new QWidget();
+	QVBoxLayout* vLayout = new QVBoxLayout(m_addSetMealWidget);
+
+	QLabel* label1 = new QLabel(QString::fromUtf8("添加新套餐"));
+	QFont Font = label1->font();
+	Font.setPointSize(16);
+	Font.setBold(false);
+	label1->setFont(Font);
+
+	QFormLayout* formLayout = new QFormLayout();
+
+	QLabel* idLabel = new QLabel(QString::fromUtf8("套餐ID："));
+	QLabel* nameLabel = new QLabel(QString::fromUtf8("套餐名称："));
+	QLabel* descriptionLabel = new QLabel(QString::fromUtf8("套餐描述："));
+	QLabel* priceLabel = new QLabel(QString::fromUtf8("套餐价格："));
+	QLabel* statusLabel = new QLabel(QString::fromUtf8("套餐状态："));
+
+	m_addSetMealControls.idSpinBox = new QSpinBox();
+	m_addSetMealControls.idSpinBox->setRange(0, 999);
+	m_addSetMealControls.nameLineEdit = new QLineEdit();
+	m_addSetMealControls.descriptionLineEdit = new QLineEdit();
+	m_addSetMealControls.priceSpinBox = new QSpinBox();
+	m_addSetMealControls.priceSpinBox->setMinimum(0);
+	m_addSetMealControls.statusComboBox = new QComboBox();
+	m_addSetMealControls.statusComboBox->addItem(QString::fromUtf8("不可预定"));
+	m_addSetMealControls.statusComboBox->addItem(QString::fromUtf8("可预定"));
+
+	m_addSetMealControls.saveButton = new QPushButton();
+	m_addSetMealControls.saveButton->setText(QString::fromUtf8("添加"));
+
+	formLayout->addRow(idLabel, m_addSetMealControls.idSpinBox);
+	formLayout->addRow(nameLabel, m_addSetMealControls.nameLineEdit);
+	formLayout->addRow(descriptionLabel, m_addSetMealControls.descriptionLineEdit);
+	formLayout->addRow(priceLabel, m_addSetMealControls.priceSpinBox);
+	formLayout->addRow(statusLabel, m_addSetMealControls.statusComboBox);
+	vLayout->addWidget(label1);
+	vLayout->addLayout(formLayout);
+	vLayout->addWidget(m_addSetMealControls.saveButton);
+}
+
 SetMealManager::SetMealManager(const std::string& filename){
 	m_totalPrice = 0;
 	m_basketStatus = 0;
 
 	createSettleWidget();
+	setupAddSetMealWidget();
 	connectSignalsAndSlots();
 	m_fShelvesLayout = new FlowLayout();
 	m_fBasketLayout = new QVBoxLayout();
@@ -116,6 +159,34 @@ void SetMealManager::showAllShelvesSetMeals(){
 	for (SetMeal* meal : m_setMeals) {
 		m_fShelvesLayout->addWidget(meal->getShelvesWidget());
 	}
+}
+
+void SetMealManager::saveSetMeal() {
+	std::string id;
+	int row_id = m_addSetMealControls.idSpinBox->value();
+	if (row_id >= 100)
+		id = "M" + std::to_string(row_id);
+	else if (row_id >= 10)
+		id = "M0" + std::to_string(row_id);
+	else
+		id = "M00" + std::to_string(row_id);
+
+	for (const auto& meal : m_setMeals)
+		if (meal->getId() == id) {
+			QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("重复套餐ID！"));
+			return;
+		}
+
+	std::string name = m_addSetMealControls.nameLineEdit->text().toStdString();
+	std::string description = m_addSetMealControls.descriptionLineEdit->text().toStdString();
+	int price = m_addSetMealControls.priceSpinBox->value();
+	int status = m_addSetMealControls.statusComboBox->currentIndex();
+
+	SetMeal* meal = new SetMeal(id, name, description, price, status);
+	m_setMeals.push_back(meal);
+	connect(meal, &SetMeal::countChanged, this, &SetMealManager::updateBasketSetMeals);
+	showAllShelvesSetMeals();
+	QMessageBox::warning(nullptr, QString::fromUtf8("警告"), QString::fromUtf8("套餐已添加！"));
 }
 
 void SetMealManager::showSettleWidget() {
@@ -185,6 +256,10 @@ void SetMealManager::settleBasket(){
 	emit newOrderPlaced(orderId, consignee, phone, address, setMealID, setMealCount, totalPriceStr, orderTime, orderStatus);
 	clearAllBasketSetMeals();
 	QMessageBox::information(nullptr, QString::fromUtf8("成功"), QString::fromUtf8("订单已提交！"));
+}
+
+void SetMealManager::showAddSetMealWidget() {
+	m_addSetMealWidget->show();
 }
 
 void SetMealManager::updateBasketSetMeals() {

@@ -22,6 +22,7 @@ void MainWindow::connectSignalsAndSlots() {
 		});
 	connect(ui.deliverButton, &QPushButton::clicked, m_orderManager, &OrderManager::showDeliveryWidget);
 	connect(m_setMealManager, &SetMealManager::newOrderPlaced, m_orderManager, &OrderManager::receiveNewOrder);
+	connect(ui.addSetMealButton, &QAction::triggered, m_setMealManager, &SetMealManager::showAddSetMealWidget);
 	// 统计
 	connect(ui.dailyStats, &QAction::triggered, this, [this]() {
 		m_statsManager->showDailyOrdersStats(m_orderManager->getOrders());
@@ -52,7 +53,10 @@ void MainWindow::connectSignalsAndSlots() {
 		});
 	// 退出
 	connect(ui.afterWorkButton, &QAction::triggered, m_orderManager, &OrderManager::CAN_I_GET_OFF_WORK);
-	connect(m_orderManager, &OrderManager::HappyHappyHappy, m_fileSystem, &FileSystem::saveOrdersToFile);
+	connect(m_orderManager, &OrderManager::HappyHappyHappy, this, [this]() {
+		m_fileSystem->saveOrdersToFile(m_orderManager->getOrders());
+		m_fileSystem->saveSetMealToFile(m_setMealManager->getSetmeals());
+		});
 	connect(m_orderManager, &OrderManager::HappyHappyHappy, this, &QApplication::quit);
 }
 

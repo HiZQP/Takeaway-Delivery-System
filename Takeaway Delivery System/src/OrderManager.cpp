@@ -277,7 +277,7 @@ void OrderManager::CAN_I_GET_OFF_WORK(){
 	msgBox.setStandardButtons(QMessageBox::Ok);
 	msgBox.setDefaultButton(QMessageBox::Ok);
 	int result = msgBox.exec();
-	emit HappyHappyHappy(m_orders);
+	emit HappyHappyHappy();
 }
 
 void OrderManager::receiveNewOrder(

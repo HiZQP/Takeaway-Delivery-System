@@ -40,5 +40,6 @@ public slots:
 	void selectDataPath();
 	void setDataPath();
 	void saveOrdersToFile(const std::vector<Order>& orders);
+	void saveSetMealToFile(const std::vector<SetMeal*>& setMeals);
 };
 
